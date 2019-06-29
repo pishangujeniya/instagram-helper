@@ -1,27 +1,40 @@
-# version 1.1
+"""
+
+# Instagram bulk Unsend message automating
+*v1.2*
+*Author Pishang Ujeniya*
+
+This python script automates un send message task for all messages sent on instagram dm.
+The script uses OpenCV image processing for getting mask of chat messages and using pyautogui windows supported library
+mimics mouse pointer action of deleting messages.
+
+## Requirements and Tested on:
+- Windows 10
+- Python 3.7.3
+- [Nox Player Android Emulator](https://www.bignox.com/) version 6.3.0
+- Screen resolution of 1920 x 1080
+- After starting Nox player change the screen mode to portrait and
+from *Nox player* > *Advanced Settings* > *Resolution Settings* > click on *Restore Window Size*
+so that the Nox Player screen sets to center of your screen
+- Open the chat DM and run the script and switch to chat screen and press Start on prompt.
+- Change the value of `LOOPER` variable to the large number to delete more messages.
+
+"""
 
 import time
 import cv2
+import numpy as np
 import pyautogui
 from PIL import Image
 from PIL import ImageGrab
-from pytesseract import image_to_string, Output
-import pytesseract
-
-# pyautogui.alert('This displays some text with an OK button.')
-# pyautogui.confirm('This displays text and has an OK and Cancel button.')
-# snapshot = ImageGrab.grab()
+from pytesseract import image_to_string
 
 LOOPER = 100
 
-INITIAL_WAIT_TIME = 1
+UN_SEND_PNG_PATH = "./unsend.png"
+SENDER_CHAT_AREA_PNG_PATH = "./sender_chat_area.png"
 
 POINTER_MOVEMENT_DURATION = 0.3
-
-PREVIOUS_CHAT_POSITION_X, PREVIOUS_CHAT_POSITION_Y = 0, 0
-
-CHAT_BOTTOM_X, CHAT_BOTTOM_Y = 0, 0
-CHAT_TOP_X, CHAT_TOP_Y = 0, 0
 
 WIDTH = pyautogui.size().width
 HEIGHT = pyautogui.size().height
@@ -31,48 +44,60 @@ NOX_HEIGHT = 1027
 NOX_SCREEN_TOP_LEFT_X = 675
 NOX_SCREEN_TOP_LEFT_Y = 10
 
-UNSEND_COPY_TOP_LEFT_X = 734
-UNSEND_COPY_TOP_LEFT_Y = 498
-UNSEND_COPY_TOP_WIDTH = 451
-UNSEND_COPY_TOP_HEIGHT = 97
-
-UNSEND_PNG_PATH = "./unsend.png"
-SENDER_CHAT_AREA_PNG_PATH = "./sender_chat_area.png"
+UN_SEND_COPY_TOP_LEFT_X = 734
+UN_SEND_COPY_TOP_LEFT_Y = 498
+UN_SEND_COPY_TOP_WIDTH = 451
+UN_SEND_COPY_TOP_HEIGHT = 97
 
 CENTER_X = WIDTH / 2
 CENTER_Y = HEIGHT / 2
 
-SENDER_CHAT_AREA_TOP_LEFT_X = NOX_SCREEN_TOP_LEFT_X + 460
+SENDER_CHAT_AREA_TOP_LEFT_X = NOX_SCREEN_TOP_LEFT_X + 465
 SENDER_CHAT_AREA_TOP_LEFT_Y = 125
 SENDER_CHAT_AREA_WIDTH = 85
-SENDER_CHAT_AREA_HEIGHT = 830
+SENDER_CHAT_AREA_HEIGHT = 826
 
 
 def move_to_nox_top_left():
+    """
+Move to the top left of nox screen
+    """
     pyautogui.moveTo(NOX_SCREEN_TOP_LEFT_X,
                      NOX_SCREEN_TOP_LEFT_Y,
                      duration=POINTER_MOVEMENT_DURATION)
 
 
 def move_to_nox_top_right():
+    """
+Move to the top right of nox screen
+    """
     pyautogui.moveTo(NOX_SCREEN_TOP_LEFT_X + NOX_WIDTH,
                      NOX_SCREEN_TOP_LEFT_Y,
                      duration=POINTER_MOVEMENT_DURATION)
 
 
 def move_to_nox_bottom_right():
+    """
+Move to the bottom right of nox screen
+    """
     pyautogui.moveTo(NOX_SCREEN_TOP_LEFT_X + NOX_WIDTH,
                      NOX_SCREEN_TOP_LEFT_Y + NOX_HEIGHT,
                      duration=POINTER_MOVEMENT_DURATION)
 
 
 def move_to_nox_bottom_left():
+    """
+Move to the bottom left of nox screen
+    """
     pyautogui.moveTo(NOX_SCREEN_TOP_LEFT_X,
                      NOX_SCREEN_TOP_LEFT_Y + NOX_HEIGHT,
                      duration=POINTER_MOVEMENT_DURATION)
 
 
 def rotate_around_nox_screen():
+    """
+Moves cursor surrounding the nox screen area
+    """
     move_to_nox_top_left()
     move_to_nox_top_right()
     move_to_nox_bottom_right()
@@ -81,6 +106,9 @@ def rotate_around_nox_screen():
 
 
 def rotate_around_sender_chat_area():
+    """
+Moves cursor surrounding sender chat area
+    """
     pyautogui.moveTo(SENDER_CHAT_AREA_TOP_LEFT_X,
                      SENDER_CHAT_AREA_TOP_LEFT_Y,
                      duration=1)
@@ -96,73 +124,40 @@ def rotate_around_sender_chat_area():
     pyautogui.moveTo(SENDER_CHAT_AREA_TOP_LEFT_X,
                      SENDER_CHAT_AREA_TOP_LEFT_Y,
                      duration=1)
-
-
-def bounding_box_around_text(image_path):
-    img = cv2.imread(image_path)
-    d = pytesseract.image_to_data(img, output_type=Output.DICT)
-    n_boxes = len(d['level'])
-
-    print("Number of messages found : " + str(n_boxes))
-
-    for i in range(n_boxes):
-        (x, y, w, h) = (d['left'][i], d['top'][i], d['width'][i], d['height'][i])
-        cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
-
-    cv2.imshow('img', img)
-    cv2.waitKey(0)
 
 
 def scroll_chat():
-    global CHAT_BOTTOM_X
-    global CHAT_BOTTOM_Y
-    global CHAT_TOP_X
-    global CHAT_TOP_Y
-
-    last_message_bottom()
-    last_bottom_x, last_bottom_y = pyautogui.position()
-    CHAT_BOTTOM_X = last_bottom_x
-    CHAT_BOTTOM_Y = last_bottom_y
-    pyautogui.moveTo(last_bottom_x, last_bottom_y - 750, duration=0)
-    CHAT_TOP_X, CHAT_TOP_Y = pyautogui.position()
-    pyautogui.dragTo(last_bottom_x, last_bottom_y, duration=2, button='left')
-
-
-def jump_message():
-    pyautogui.moveRel(0, -50, duration=POINTER_MOVEMENT_DURATION)
+    """
+Scrolls chat screen from top to bottom
+    """
+    pyautogui.moveTo(SENDER_CHAT_AREA_TOP_LEFT_X,
+                     SENDER_CHAT_AREA_TOP_LEFT_Y,
+                     duration=0)
+    pyautogui.dragTo(SENDER_CHAT_AREA_TOP_LEFT_X,
+                     SENDER_CHAT_AREA_TOP_LEFT_Y + SENDER_CHAT_AREA_HEIGHT,
+                     duration=2,
+                     button='left')
 
 
 def touch_hold_at_current():
+    """
+Touch and hold at current cursor position
+    """
     pyautogui.mouseDown(button='left')
     time.sleep(1)
     pyautogui.mouseUp(button='left')
 
 
-def move_to_unsend():
+def move_to_un_send():
+    """
+Moves cursor to the un send message dialogue button
+    """
     pyautogui.moveTo(CENTER_X, CENTER_Y, duration=0)
     pyautogui.moveRel(0, -16, duration=0)
     pyautogui.moveRel(210, 0, duration=0)
 
 
-def move_to_prev_chat():
-    pyautogui.moveTo(PREVIOUS_CHAT_POSITION_X, PREVIOUS_CHAT_POSITION_Y, duration=POINTER_MOVEMENT_DURATION)
-
-
-def last_message_bottom():
-    pyautogui.moveTo(CENTER_X, CENTER_Y, duration=POINTER_MOVEMENT_DURATION)
-    pyautogui.moveRel(225, 380, duration=POINTER_MOVEMENT_DURATION)
-    pX, pY = pyautogui.position()
-    global PREVIOUS_CHAT_POSITION_X
-    PREVIOUS_CHAT_POSITION_X = pX
-    global PREVIOUS_CHAT_POSITION_Y
-    PREVIOUS_CHAT_POSITION_Y = pY
-
-
-print("Sleeping for " + str(INITIAL_WAIT_TIME))
-time.sleep(INITIAL_WAIT_TIME)
-print("In Action")
-
-print(" Width : " + str(WIDTH) + "Height  : " + str(HEIGHT))
+print("Screen Resolution :  Width : " + str(WIDTH) + " Height  : " + str(HEIGHT))
 print(str(WIDTH) + " x " + str(HEIGHT))
 print("Center point " + str(CENTER_X) + " x " + str(CENTER_Y))
 
@@ -171,16 +166,8 @@ pyautogui.alert('Start ? ')
 print("NoxPlayer found : ")
 print("NoxPlayer" in pyautogui.getAllTitles())
 
-init_ime = round(time.time())
-end_time = round(time.time())
-
-prevX, prevY = 0, 0
-
 for x in range(LOOPER):
-    print(" x : " + str(x))
-
-    # init_ime = round(time.time())
-    # print("init_ime : " + str(init_ime))
+    print("Current LOOPER : " + str(x))
 
     sender_chat_area_snap = ImageGrab.grab(bbox=(
         SENDER_CHAT_AREA_TOP_LEFT_X,
@@ -190,87 +177,48 @@ for x in range(LOOPER):
 
     sender_chat_area_snap.save(SENDER_CHAT_AREA_PNG_PATH)
 
-    # Bounding Box around text
-    img = cv2.imread(SENDER_CHAT_AREA_PNG_PATH)
-    d = pytesseract.image_to_data(img, output_type=Output.DICT)
-    n_boxes = len(d['level'])
+    image = cv2.imread(SENDER_CHAT_AREA_PNG_PATH)
 
-    print("Number of messages found : " + str(n_boxes))
+    # Making mask of chat messages and content from background
+    lower = np.array([0, 0, 0], dtype="uint8")
+    upper = np.array([254, 254, 254], dtype="uint8")
 
-    if n_boxes > 1:
-        (x, y, w, h) = (d['left'][1], d['top'][1], d['width'][1], d['height'][1])
-        chat_pos_x = x + SENDER_CHAT_AREA_TOP_LEFT_X
-        chat_pos_y = y + SENDER_CHAT_AREA_TOP_LEFT_Y
+    mask = cv2.inRange(image, lower, upper)
+    output = cv2.bitwise_and(image, image, mask=mask)
 
-        if prevX == x and prevY == y:
-            scroll_chat()
-            continue
+    # show the images
+    # cv2.imshow("images", np.hstack([image, output]))
+    # cv2.waitKey(0)
 
-        prevX, prevY = x, y
+    # Finding Black color
+    color = (0, 0, 0)
+    indices = np.where(output != color)
+    # print(indices)
+    coordinates = zip(indices[0], indices[1])
+    # now unique_coordinates has only non black coordinates
+    unique_coordinates = list(set(list(coordinates)))
 
-        print("Message at : " + str(x) + " x " + str(y))
-
-        pyautogui.moveTo(chat_pos_x, chat_pos_y, duration=POINTER_MOVEMENT_DURATION)
+    if len(unique_coordinates) > 0:
+        print("Yes")
+        py, px = unique_coordinates[0]
+        pyautogui.moveTo(SENDER_CHAT_AREA_TOP_LEFT_X + px,
+                         SENDER_CHAT_AREA_TOP_LEFT_Y + py,
+                         duration=POINTER_MOVEMENT_DURATION)
 
         temppx, tempy = pyautogui.position()
         if not pyautogui.pixelMatchesColor(temppx, tempy, (255, 255, 255)):
             touch_hold_at_current()
             # pytesseract.pytesseract.tesseract_cmd = r'C:/Program Files (x86)/Tesseract-OCR'
             unsend_screen_snap = ImageGrab.grab(bbox=(
-                UNSEND_COPY_TOP_LEFT_X, UNSEND_COPY_TOP_LEFT_Y, UNSEND_COPY_TOP_LEFT_X + UNSEND_COPY_TOP_WIDTH,
-                UNSEND_COPY_TOP_LEFT_Y + UNSEND_COPY_TOP_HEIGHT))
-            unsend_screen_snap.save(UNSEND_PNG_PATH)
-            unsend_value = image_to_string(Image.open(UNSEND_PNG_PATH))
+                UN_SEND_COPY_TOP_LEFT_X, UN_SEND_COPY_TOP_LEFT_Y, UN_SEND_COPY_TOP_LEFT_X + UN_SEND_COPY_TOP_WIDTH,
+                UN_SEND_COPY_TOP_LEFT_Y + UN_SEND_COPY_TOP_HEIGHT))
+            unsend_screen_snap.save(UN_SEND_PNG_PATH)
+            unsend_value = image_to_string(Image.open(UN_SEND_PNG_PATH))
 
             if "unsend" in unsend_value.lower():
-                print("unsend exists")
-                move_to_unsend()
+                print("Clicking on un send")
+                move_to_un_send()
                 pyautogui.leftClick()
     else:
+        print("No. So scrolling...")
         scroll_chat()
-
-    # end_time = round(time.time())
-    # print("end_time : " + str(end_time))
-
-#
-# last_message_bottom()
-#
-# scroll_chat()
-#
-# for x in range(LOOPER):
-#
-#     print(" X : " + str(x))
-#
-#     PREVIOUS_CHAT_POSITION_X, PREVIOUS_CHAT_POSITION_Y = pyautogui.position()
-#
-#     temppx, tempy = pyautogui.position()
-#
-#     # im = pyautogui.screenshot()
-#     # print(im.getpixel((temppx, tempy)))
-#
-#     if pyautogui.pixelMatchesColor(temppx, tempy, (255, 255, 255)):
-#         move_to_prev_chat()
-#         jump_message()
-#     else:
-#         touch_hold_at_current()
-#
-#         # pytesseract.pytesseract.tesseract_cmd = r'C:/Program Files (x86)/Tesseract-OCR'
-#         unsend_screen_snap = ImageGrab.grab(bbox=(
-#             UNSEND_COPY_TOP_LEFT_X, UNSEND_COPY_TOP_LEFT_Y, UNSEND_COPY_TOP_LEFT_X + UNSEND_COPY_TOP_WIDTH,
-#             UNSEND_COPY_TOP_LEFT_Y + UNSEND_COPY_TOP_HEIGHT))
-#         unsend_screen_snap.save(UNSEND_PNG_PATH)
-#         unsend_value = image_to_string(Image.open(UNSEND_PNG_PATH))
-#
-#         if "unsend" in unsend_value.lower():
-#             print("unsend exists")
-#             move_to_unsend()
-#             pyautogui.leftClick()
-#             # last_message_bottom()
-#
-#         move_to_prev_chat()
-#         jump_message()
-#
-#     px, py = pyautogui.position()
-#
-#     if py <= CHAT_TOP_Y:
-#         scroll_chat()
