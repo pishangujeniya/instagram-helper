@@ -1,8 +1,8 @@
 """
 
 # Instagram bulk Unsend message automating
-*v1.2*
-*Author Pishang Ujeniya*
+*v1.3*
+*Pishang Ujeniya*
 
 This python script automates un send message task for all messages sent on instagram dm.
 The script uses OpenCV image processing for getting mask of chat messages and using pyautogui windows supported library
@@ -11,6 +11,8 @@ mimics mouse pointer action of deleting messages.
 ## Requirements and Tested on:
 - Windows 10
 - Python 3.7.3
+- [Tesseract](https://github.com/tesseract-ocr/tesseract/releases) needed by [pytesseract](https://github.com/madmaze/pytesseract)
+- [Follow this guide for installing in Windows](https://github.com/UB-Mannheim/tesseract/wiki)
 - [Nox Player Android Emulator](https://www.bignox.com/) version 6.3.0
 - Screen resolution of 1920 x 1080
 - After starting Nox player change the screen mode to portrait and
@@ -27,6 +29,7 @@ import numpy as np
 import pyautogui
 from PIL import Image
 from PIL import ImageGrab
+
 from pytesseract import image_to_string
 
 LOOPER = 100
@@ -44,10 +47,10 @@ NOX_HEIGHT = 1027
 NOX_SCREEN_TOP_LEFT_X = 675
 NOX_SCREEN_TOP_LEFT_Y = 10
 
-UN_SEND_COPY_TOP_LEFT_X = 734
-UN_SEND_COPY_TOP_LEFT_Y = 498
-UN_SEND_COPY_TOP_WIDTH = 451
-UN_SEND_COPY_TOP_HEIGHT = 97
+UN_SEND_COPY_TOP_LEFT_X = 735
+UN_SEND_COPY_TOP_LEFT_Y = 475
+UN_SEND_COPY_TOP_WIDTH = 450
+UN_SEND_COPY_TOP_HEIGHT = 150
 
 CENTER_X = WIDTH / 2
 CENTER_Y = HEIGHT / 2
@@ -148,13 +151,15 @@ Touch and hold at current cursor position
     pyautogui.mouseUp(button='left')
 
 
-def move_to_un_send():
+def move_to_un_send(total_buttons=3):
     """
-Moves cursor to the un send message dialogue button
+Moves the cursor to un send button.
+    :param total_buttons: total number of buttons on the dialogue box having un send button
     """
-    pyautogui.moveTo(CENTER_X, CENTER_Y, duration=0)
-    pyautogui.moveRel(0, -16, duration=0)
-    pyautogui.moveRel(210, 0, duration=0)
+    if total_buttons == 1 or total_buttons == 2:
+        pyautogui.moveTo(CENTER_X + 210, CENTER_Y - 16, duration=0)
+    else:
+        pyautogui.moveTo(CENTER_X + 210, CENTER_Y - 16 - 16, duration=0)
 
 
 print("Screen Resolution :  Width : " + str(WIDTH) + " Height  : " + str(HEIGHT))
@@ -207,18 +212,30 @@ for x in range(LOOPER):
 
         temppx, tempy = pyautogui.position()
         if not pyautogui.pixelMatchesColor(temppx, tempy, (255, 255, 255)):
+
             touch_hold_at_current()
+
+            # PYTESSERACT STARTS
             # pytesseract.pytesseract.tesseract_cmd = r'C:/Program Files (x86)/Tesseract-OCR'
             unsend_screen_snap = ImageGrab.grab(bbox=(
                 UN_SEND_COPY_TOP_LEFT_X, UN_SEND_COPY_TOP_LEFT_Y, UN_SEND_COPY_TOP_LEFT_X + UN_SEND_COPY_TOP_WIDTH,
                 UN_SEND_COPY_TOP_LEFT_Y + UN_SEND_COPY_TOP_HEIGHT))
             unsend_screen_snap.save(UN_SEND_PNG_PATH)
             unsend_value = image_to_string(Image.open(UN_SEND_PNG_PATH))
+            # PYTESSERACT ENDS
 
             if "unsend" in unsend_value.lower():
+                if "unlike" in unsend_value.lower():
+                    print("Moving to un send out of 3 buttons")
+                    move_to_un_send(total_buttons=3)
+                else:
+                    print("Moving to un send out of 2 buttons")
+                    move_to_un_send(total_buttons=2)
                 print("Clicking on un send")
-                move_to_un_send()
+                exit()
                 pyautogui.leftClick()
+
+
     else:
         print("No. So scrolling...")
         scroll_chat()
