@@ -1,6 +1,6 @@
 # Instagram bulk Unsend message automating
-*v1.2*
-*Author Pishang Ujeniya*
+*v1.3*
+*Pishang Ujeniya*
 
 This python script automates un send message task for all messages sent on instagram dm.
 The script uses OpenCV image processing for getting mask of chat messages and using pyautogui windows supported library
