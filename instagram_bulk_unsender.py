@@ -1,7 +1,7 @@
 """
 
 # Instagram bulk Unsend message automating
-*v1.3*
+*v1.4*
 *Pishang Ujeniya*
 
 This python script automates un send message task for all messages sent on instagram dm.
@@ -32,7 +32,7 @@ from PIL import ImageGrab
 
 from pytesseract import image_to_string
 
-LOOPER = 100
+LOOPER = 2000
 
 UN_SEND_PNG_PATH = "./unsend.png"
 SENDER_CHAT_AREA_PNG_PATH = "./sender_chat_area.png"
@@ -171,6 +171,8 @@ pyautogui.alert('Start ? ')
 print("NoxPlayer found : ")
 print("NoxPlayer" in pyautogui.getAllTitles())
 
+do_not_click_on_it_again = [(0, 0)]
+
 for x in range(LOOPER):
     print("Current LOOPER : " + str(x))
 
@@ -205,7 +207,13 @@ for x in range(LOOPER):
 
     if len(unique_coordinates) > 0:
         print("Yes")
+
+        ind = 0
         py, px = unique_coordinates[0]
+        while (px, py) in do_not_click_on_it_again:
+            py, px = unique_coordinates[ind]
+            ind = ind + 1
+
         pyautogui.moveTo(SENDER_CHAT_AREA_TOP_LEFT_X + px,
                          SENDER_CHAT_AREA_TOP_LEFT_Y + py,
                          duration=POINTER_MOVEMENT_DURATION)
@@ -232,10 +240,12 @@ for x in range(LOOPER):
                     print("Moving to un send out of 2 buttons")
                     move_to_un_send(total_buttons=2)
                 print("Clicking on un send")
-                exit()
                 pyautogui.leftClick()
-
-
+                do_not_click_on_it_again.append((px, py))
+            else:
+                pyautogui.leftClick()
+                do_not_click_on_it_again.append((px, py))
     else:
         print("No. So scrolling...")
         scroll_chat()
+        do_not_click_on_it_again.clear()
