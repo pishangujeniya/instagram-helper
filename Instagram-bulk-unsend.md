@@ -1,5 +1,5 @@
 # Instagram bulk Unsend message automating
-*v1.3*
+*v1.5*
 *Pishang Ujeniya*
 
 This python script automates un send message task for all messages sent on instagram dm.
@@ -9,7 +9,8 @@ mimics mouse pointer action of deleting messages.
 ## Requirements and Tested on:
 - Windows 10
 - Python 3.7.3
-- [Nox Player Android Emulator](https://www.bignox.com/) version 6.3.0- [Tesseract](https://github.com/tesseract-ocr/tesseract/releases) needed by [pytesseract](https://github.com/madmaze/pytesseract)
+- [Nox Player Android Emulator](https://www.bignox.com/) version 6.3.0
+- [Tesseract](https://github.com/tesseract-ocr/tesseract/releases) needed by [pytesseract](https://github.com/madmaze/pytesseract)
 - [Follow this guide for installing in Windows](https://github.com/UB-Mannheim/tesseract/wiki)
 - [Nox Player Android Emulator](https://www.bignox.com/) version 6.3.0
 - Screen resolution of 1920 x 1080

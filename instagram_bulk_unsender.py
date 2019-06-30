@@ -1,7 +1,7 @@
 """
 
 # Instagram bulk Unsend message automating
-*v1.4*
+*v1.5*
 *Pishang Ujeniya*
 
 This python script automates un send message task for all messages sent on instagram dm.
@@ -171,6 +171,9 @@ pyautogui.alert('Start ? ')
 print("NoxPlayer found : ")
 print("NoxPlayer" in pyautogui.getAllTitles())
 
+rotate_around_nox_screen()
+rotate_around_sender_chat_area()
+
 do_not_click_on_it_again = [(0, 0)]
 
 for x in range(LOOPER):
@@ -205,12 +208,14 @@ for x in range(LOOPER):
     # now unique_coordinates has only non black coordinates
     unique_coordinates = list(set(list(coordinates)))
 
+    print("Messages found : ")
+
     if len(unique_coordinates) > 0:
         print("Yes")
 
         ind = 0
         py, px = unique_coordinates[0]
-        while (px, py) in do_not_click_on_it_again:
+        while (px, py) in do_not_click_on_it_again and ind < len(unique_coordinates):
             py, px = unique_coordinates[ind]
             ind = ind + 1
 
@@ -245,6 +250,8 @@ for x in range(LOOPER):
             else:
                 pyautogui.leftClick()
                 do_not_click_on_it_again.append((px, py))
+        else:
+            do_not_click_on_it_again.append((px, py))
     else:
         print("No. So scrolling...")
         scroll_chat()
