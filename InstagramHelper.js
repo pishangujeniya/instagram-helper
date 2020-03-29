@@ -54,7 +54,7 @@ class InstagramHelper {
      * @param {number} maxPageIndex last page till which all the messages will be fetched (default 5)
      * @param {boolean} isAllMessages (default false) if true ignores currentPageIndex and maxPageIndex
      */
-    async getMessagesItemsArray(currentPageIndex, maxPageIndex, isAllMessages) {
+    getMessagesItemsArray(currentPageIndex, maxPageIndex, isAllMessages) {
 
         if (currentPageIndex == undefined || currentPageIndex == null) {
             currentPageIndex = 0;
@@ -124,7 +124,7 @@ class InstagramHelper {
                         // console.log(data);
                         console.log("getting messages...");
                         data.thread.items.forEach(element => {
-                            if (element.user_id == this.p_userId) {
+                            if (element.user_id.toString() == this.p_userId.toString()) {
                                 if (!this.p_itemsIdArray.includes(element.item_id)) {
                                     this.p_itemsIdArray.push(element.item_id);
                                 }
@@ -147,9 +147,6 @@ class InstagramHelper {
         } else {
             console.warn("All Messages fetched, No More messages to fetch");
         }
-
-        return undefined;
-
     }
 
 
@@ -157,7 +154,7 @@ class InstagramHelper {
      * unsends all messages
      * @param {number} itemIndex starting index from itemsIdArray to delete till array end
      */
-    async deleteAllMessages(itemIndex) {
+    deleteAllMessages(itemIndex) {
         if (itemIndex < this.p_itemsIdArray.length) {
             var p_unsendRequestInitObj = {
                 "credentials": "include",
@@ -200,9 +197,6 @@ class InstagramHelper {
         } else {
             console.warn("All Messages Deleted");
         }
-
-        return undefined;
-
     }
 
 }
