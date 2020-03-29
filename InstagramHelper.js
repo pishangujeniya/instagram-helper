@@ -125,8 +125,8 @@ class InstagramHelper {
                         console.log("getting messages...");
                         data.thread.items.forEach(element => {
                             if (element.user_id.toString() == this.p_userId.toString()) {
-                                if (!this.p_itemsIdArray.includes(element.item_id)) {
-                                    this.p_itemsIdArray.push(element.item_id);
+                                if (!this.p_itemsIdArray.includes(element.item_id.toString())) {
+                                    this.p_itemsIdArray.push(element.item_id.toString());
                                 }
                             }
                         });
