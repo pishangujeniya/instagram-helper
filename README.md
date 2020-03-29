@@ -7,6 +7,7 @@ This JavaScript has helper methods to perform various tasks automation.
 ### How to use this script?
 
 1. Run the following command in *Chrome Browser Dev Console* by pressing *F12*
+2. Change the browser mode to phone mode (icon between the Elements Tab and Arrow)
 
 ```javascript
 
