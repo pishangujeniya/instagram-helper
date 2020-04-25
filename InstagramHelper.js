@@ -13,6 +13,7 @@ class InstagramHelper {
         this.p_itemsIdArray = [];
         this.p_oldestCursor = "";
         this.p_prevCursor = "";
+        this.getConsumerLibCommonsJs();
     }
 
     /**
@@ -46,6 +47,62 @@ class InstagramHelper {
         }
         return Math.floor((Math.random() * maxNumber) + 1);
 
+    }
+
+    /**
+     * provides the ConsumerLibCommon Js File
+     * @param {string} jsFileName default is 759be62fac48.js
+     */
+    getConsumerLibCommonsJs(jsFileName = "759be62fac48.js") {
+
+        let consumerLibCommonsJsRequestUrl = "https://www.instagram.com/static/bundles/es6/ConsumerLibCommons.js/" + jsFileName;
+        let consumerLibCommonsJsRequestInit = {
+            "headers": {
+                "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+                "accept-language": "en-US,en;q=0.9",
+                "cache-control": "no-cache",
+                "pragma": "no-cache",
+                "sec-fetch-dest": "document",
+                "sec-fetch-mode": "navigate",
+                "sec-fetch-site": "none",
+                "sec-fetch-user": "?1",
+                "upgrade-insecure-requests": "1"
+            },
+            "referrerPolicy": "no-referrer-when-downgrade",
+            "body": null,
+            "method": "GET",
+            "mode": "cors",
+            "credentials": "include"
+        };
+
+        fetch(
+            consumerLibCommonsJsRequestUrl,
+            consumerLibCommonsJsRequestInit
+        )
+            .then((response) => {
+                if (response.status != 200) {
+                    console.error("Try again tomorrow");
+                } else {
+                    return response.text();
+                }
+            })
+            .then((data) => {
+                let appIdVariableNames = [
+                    "instagramFBAppId",
+                    "instagramWebFBAppId",
+                    "instagramWebDesktopFBAppId",
+                    "igLiteAppId"
+                ];
+
+                appIdVariableNames.forEach(singleppIdVariableName => {
+                    let searchString = singleppIdVariableName + "='";
+                    let indexOfSearchedStringVariableName = data.indexOf(searchString);
+                    let valueData = data.substring(indexOfSearchedStringVariableName + searchString.length);
+                    let singleAppIdValue = valueData.substring(0, valueData.indexOf("'"));
+                    // console.warn(singleppIdVariableName + " = " + singleAppIdValue);
+                    localStorage.setItem(singleppIdVariableName, singleAppIdValue);
+                });
+            });
     }
 
     /**
@@ -98,6 +155,7 @@ class InstagramHelper {
                         "sec-fetch-dest": "empty",
                         "sec-fetch-mode": "cors",
                         "sec-fetch-site": "same-origin",
+                        "x-ig-app-id": localStorage.getItem("instagramWebFBAppId"),
                         "x-ig-www-claim": sessionStorage.getItem("www-claim-v2"),
                         "x-requested-with": "XMLHttpRequest"
                     },
@@ -169,6 +227,7 @@ class InstagramHelper {
                     "sec-fetch-mode": "cors",
                     "sec-fetch-site": "same-origin",
                     "x-csrftoken": this.getCookie("csrftoken"),
+                    "x-ig-app-id": localStorage.getItem("instagramWebFBAppId"),
                     "x-ig-www-claim": sessionStorage.getItem("www-claim-v2"),
                     "x-requested-with": "XMLHttpRequest"
                 },
