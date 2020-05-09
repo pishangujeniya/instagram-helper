@@ -6,11 +6,24 @@ class InstagramHelper {
     /**
      * default constructor
      */
-    constructor() {
+    constructor(p_threadLink = null) {
         this.p_userId = this.getCookie("ds_user_id");
-        this.p_threadLink = window.location.pathname;
+
+        if (p_threadLink == null || p_threadLink == undefined) {
+            this.p_threadLink = window.location.pathname;
+        } else {
+            this.p_threadLink = p_threadLink;
+        }
+
         this.p_threadId = this.p_threadLink.replace("/direct/t/", "");
         this.p_itemsIdArray = [];
+        this.p_remainingItemsIdArray = [];
+
+        if (localStorage.getItem('messages_ids') != undefined) {
+            this.p_itemsIdArray = localStorage.getItem('messages_ids').split(',');
+            this.p_remainingItemsIdArray = this.p_itemsIdArray;
+        }
+
         this.p_oldestCursor = "";
         this.p_prevCursor = "";
         this.getConsumerLibCommonsJs();
@@ -111,19 +124,7 @@ class InstagramHelper {
      * @param {number} maxPageIndex last page till which all the messages will be fetched (default 5)
      * @param {boolean} isAllMessages (default false) if true ignores currentPageIndex and maxPageIndex
      */
-    getMessagesItemsArray(currentPageIndex, maxPageIndex, isAllMessages) {
-
-        if (currentPageIndex == undefined || currentPageIndex == null) {
-            currentPageIndex = 0;
-        }
-
-        if (maxPageIndex == undefined || maxPageIndex == null) {
-            maxPageIndex = 5;
-        }
-
-        if (isAllMessages == undefined || isAllMessages == null) {
-            isAllMessages = false;
-        }
+    getMessagesItemsArray(currentPageIndex = 0, maxPageIndex = 5, isAllMessages = false) {
 
         // if its first message ever sent then stop else continue
         if (this.p_prevCursor != "MINCURSOR") {
@@ -199,10 +200,14 @@ class InstagramHelper {
                     });
 
             } else {
+                localStorage.setItem('messages_ids', this.p_itemsIdArray);
+                this.p_remainingItemsIdArray = this.p_itemsIdArray;
                 console.warn("All Messages fetched, as per requested");
             }
 
         } else {
+            localStorage.setItem('messages_ids', this.p_itemsIdArray);
+            this.p_remainingItemsIdArray = this.p_itemsIdArray;
             console.warn("All Messages fetched, No More messages to fetch");
         }
     }
@@ -212,47 +217,62 @@ class InstagramHelper {
      * unsends all messages
      * @param {number} itemIndex starting index from itemsIdArray to delete till array end
      */
-    deleteAllMessages(itemIndex) {
+    deleteAllMessages(itemIndex = 0) {
         if (itemIndex < this.p_itemsIdArray.length) {
-            var p_unsendRequestInitObj = {
-                "credentials": "include",
-                "credentials": "include",
-                "headers": {
-                    "accept": "*/*",
-                    "accept-language": "en-US,en;q=0.9",
-                    "cache-control": "no-cache",
-                    "content-type": "application/x-www-form-urlencoded",
-                    "pragma": "no-cache",
-                    "sec-fetch-dest": "empty",
-                    "sec-fetch-mode": "cors",
-                    "sec-fetch-site": "same-origin",
-                    "x-csrftoken": this.getCookie("csrftoken"),
-                    "x-ig-app-id": localStorage.getItem("instagramWebFBAppId"),
-                    "x-ig-www-claim": sessionStorage.getItem("www-claim-v2"),
-                    "x-requested-with": "XMLHttpRequest"
-                },
-                "referrer": this.p_threadLink,
-                "referrerPolicy": "no-referrer-when-downgrade",
-                "body": null,
-                "method": "POST",
-                "mode": "cors"
-            };
+            if (this.p_remainingItemsIdArray.includes(this.p_itemsIdArray[itemIndex])) {
+                var p_unsendRequestInitObj = {
+                    "credentials": "include",
+                    "credentials": "include",
+                    "headers": {
+                        "accept": "*/*",
+                        "accept-language": "en-US,en;q=0.9",
+                        "cache-control": "no-cache",
+                        "content-type": "application/x-www-form-urlencoded",
+                        "pragma": "no-cache",
+                        "sec-fetch-dest": "empty",
+                        "sec-fetch-mode": "cors",
+                        "sec-fetch-site": "same-origin",
+                        "x-csrftoken": this.getCookie("csrftoken"),
+                        "x-ig-app-id": localStorage.getItem("instagramWebFBAppId"),
+                        "x-ig-www-claim": sessionStorage.getItem("www-claim-v2"),
+                        "x-requested-with": "XMLHttpRequest"
+                    },
+                    "referrer": this.p_threadLink,
+                    "referrerPolicy": "no-referrer-when-downgrade",
+                    "body": null,
+                    "method": "POST",
+                    "mode": "cors"
+                };
 
-            fetch(
-                "https://www.instagram.com/direct_v2/web/threads/" + this.p_threadId + "/items/" + this.p_itemsIdArray[itemIndex] + "/delete/",
-                p_unsendRequestInitObj
-            ).then((response) => {
-                // console.log(response);
-                if (response.status != 200) {
-                    console.error("Try again tomorrow");
-                } else {
-                    console.info("Deleting...");
-                    setTimeout(this.deleteAllMessages(itemIndex + 1), this.getRandomIntegerBetween(5) * 1000);
-                }
-            }).catch((error) => {
-                console.error(error);
-            });
+                fetch(
+                    "https://www.instagram.com/direct_v2/web/threads/" + this.p_threadId + "/items/" + this.p_itemsIdArray[itemIndex] + "/delete/",
+                    p_unsendRequestInitObj
+                ).then((response) => {
+                    
+                    console.log(response);
 
+                    // Removing from remainingItemsIdArray
+                    for (var i = this.p_remainingItemsIdArray.length - 1; i >= 0; i--) {
+                        if (this.p_remainingItemsIdArray[i] === this.p_itemsIdArray[itemIndex]) {
+                            this.p_remainingItemsIdArray.splice(i, 1);
+                        }
+                    }
+
+                    // console.log(response);
+                    if (response.status != 200) {
+                        console.error("Try again tomorrow");
+                    } else {
+                        console.info("Deleting...");
+                        setTimeout(this.deleteAllMessages(itemIndex + 1), this.getRandomIntegerBetween(5) * 1000);
+                    }
+                }).catch((error) => {
+                    console.error(error);
+                });
+            } else {
+                // already deleted so delete next.
+                console.info("Already deleted");
+                setTimeout(this.deleteAllMessages(itemIndex + 1), this.getRandomIntegerBetween(5) * 1000);
+            }
         } else {
             console.warn("All Messages Deleted");
         }
