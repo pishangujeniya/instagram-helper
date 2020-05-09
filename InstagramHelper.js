@@ -26,6 +26,34 @@ class InstagramHelper {
         this.p_oldestCursor = "";
         this.p_prevCursor = "";
         this.getConsumerLibCommonsJs();
+        this.stopGettingMessages = false;
+        this.stopDeletingMessages = false;
+    }
+
+    /**
+     * imports messages ids
+     * @param {string} comma_separated_string array of ids command separated string
+     */
+    importMessagesIds(comma_separated_string) {
+        localStorage.setItem('messages_ids', comma_separated_string);
+        this.p_itemsIdArray = localStorage.getItem('messages_ids').split(',');
+    }
+
+    /**
+     * imports deleted messages ids
+     * @param {string} comma_separated_string array of ids command separated string
+     */
+    importDeletedMessagesIds(comma_separated_string) {
+        localStorage.setItem('deleted_messages_ids', comma_separated_string);
+        this.deletedItemIdArray = localStorage.getItem('deleted_messages_ids').split(',');
+    }
+
+    exportMessagesIds() {
+        return localStorage.getItem('messages_ids').split(',');
+    }
+
+    exportDeletedMessagesIds() {
+        return localStorage.getItem('deleted_messages_ids').split(',');
     }
 
     /**
@@ -65,7 +93,7 @@ class InstagramHelper {
      * provides the ConsumerLibCommon Js File
      * @param {string} jsFileName default is 759be62fac48.js
      */
-    getConsumerLibCommonsJs(jsFileName = "759be62fac48.js") {
+    async getConsumerLibCommonsJs(jsFileName = "759be62fac48.js") {
 
         let consumerLibCommonsJsRequestUrl = "https://www.instagram.com/static/bundles/es6/ConsumerLibCommons.js/" + jsFileName;
         let consumerLibCommonsJsRequestInit = {
@@ -87,7 +115,7 @@ class InstagramHelper {
             "credentials": "include"
         };
 
-        fetch(
+        await fetch(
             consumerLibCommonsJsRequestUrl,
             consumerLibCommonsJsRequestInit
         )
@@ -121,17 +149,17 @@ class InstagramHelper {
     /**
      * Fetch the messages and its itemIds
      */
-    async getAllMessageIds(threadLink) {
+    async getAllMessageIds(threadId) {
 
-        if (threadLink == null || threadLink == undefined) {
-            console.error("threadLink must be passed");
+        if (threadId == null || threadId == undefined) {
+            console.error("threadId must be passed");
             return false;
         }
 
-        let threadId = threadLink.replace("https://www.instagram.com/direct/t/", "");
+        let threadLink = "https://www.instagram.com/direct/t/" + threadId;
 
         // if its first message ever sent then stop else continue
-        while (this.p_prevCursor != "MINCURSOR") {
+        while (this.p_prevCursor != "MINCURSOR" && this.stopGettingMessages == false) {
 
             var getMessageAPIUrl = "https://www.instagram.com/direct_v2/web/threads/" + threadId + "/";
             if (this.p_oldestCursor != undefined && this.p_oldestCursor != null && this.p_oldestCursor.length > 0) {
@@ -201,61 +229,71 @@ class InstagramHelper {
     /**
      * unsends all messages
      */
-    async deleteAllMessages(threadLink) {
+    async deleteAllMessages(threadId) {
 
-        if (threadLink == null || threadLink == undefined) {
-            console.error("threadLink must be passed");
+        if (threadId == null || threadId == undefined) {
+            console.error("threadId must be passed");
             return false;
         }
 
-        let threadId = threadLink.replace("https://www.instagram.com/direct/t/", "");
+        let threadLink = "https://www.instagram.com/direct/t/" + threadId;
 
-        for (let itemIndex = 0; itemIndex < this.p_itemsIdArray.length; itemIndex++) {
+        let previous_status_code = 200;
 
-            const messageItemId = this.p_itemsIdArray[itemIndex];
+        for (let itemIndex = 0; (itemIndex < this.p_itemsIdArray.length && this.stopDeletingMessages == false); itemIndex++) {
 
-            if (this.deletedItemIdArray.includes(messageItemId) || messageItemId.length < 1) {
-                console.info("Already deleted " + messageItemId)
+            if (previous_status_code == 200) {
+
+                const messageItemId = this.p_itemsIdArray[itemIndex];
+
+                if (this.deletedItemIdArray.includes(messageItemId) || messageItemId.length < 1) {
+                    console.info("Already deleted");
+                } else {
+                    var p_unsendRequestInitObj = {
+                        "credentials": "include",
+                        "credentials": "include",
+                        "headers": {
+                            "accept": "*/*",
+                            "accept-language": "en-US,en;q=0.9",
+                            "cache-control": "no-cache",
+                            "content-type": "application/x-www-form-urlencoded",
+                            "pragma": "no-cache",
+                            "sec-fetch-dest": "empty",
+                            "sec-fetch-mode": "cors",
+                            "sec-fetch-site": "same-origin",
+                            "x-csrftoken": this.getCookie("csrftoken"),
+                            "x-ig-app-id": localStorage.getItem("instagramWebFBAppId"),
+                            "x-ig-www-claim": sessionStorage.getItem("www-claim-v2"),
+                            "x-requested-with": "XMLHttpRequest"
+                        },
+                        "referrer": threadLink,
+                        "referrerPolicy": "no-referrer-when-downgrade",
+                        "body": null,
+                        "method": "POST",
+                        "mode": "cors"
+                    };
+
+                    await fetch(
+                        "https://www.instagram.com/direct_v2/web/threads/" + threadId + "/items/" + messageItemId + "/delete/",
+                        p_unsendRequestInitObj
+                    ).then((response) => {
+                        previous_status_code = response.status;
+                        if (response.status != 200) {
+                            console.error("Try again tomorrow");
+                            throw response.status;
+                        } else {
+                            console.info("Deleted " + messageItemId);
+                            this.deletedItemIdArray.push(messageItemId);
+                        }
+                    }).catch((error) => {
+                        console.error(error);
+                        return false;
+                    });
+                }
             } else {
-                var p_unsendRequestInitObj = {
-                    "credentials": "include",
-                    "credentials": "include",
-                    "headers": {
-                        "accept": "*/*",
-                        "accept-language": "en-US,en;q=0.9",
-                        "cache-control": "no-cache",
-                        "content-type": "application/x-www-form-urlencoded",
-                        "pragma": "no-cache",
-                        "sec-fetch-dest": "empty",
-                        "sec-fetch-mode": "cors",
-                        "sec-fetch-site": "same-origin",
-                        "x-csrftoken": this.getCookie("csrftoken"),
-                        "x-ig-app-id": localStorage.getItem("instagramWebFBAppId"),
-                        "x-ig-www-claim": sessionStorage.getItem("www-claim-v2"),
-                        "x-requested-with": "XMLHttpRequest"
-                    },
-                    "referrer": threadLink,
-                    "referrerPolicy": "no-referrer-when-downgrade",
-                    "body": null,
-                    "method": "POST",
-                    "mode": "cors"
-                };
-
-                await fetch(
-                    "https://www.instagram.com/direct_v2/web/threads/" + threadId + "/items/" + messageItemId + "/delete/",
-                    p_unsendRequestInitObj
-                ).then((response) => {
-                    if (response.status != 200) {
-                        console.error("Try again tomorrow");
-                        throw response.status;
-                    } else {
-                        console.info("Deleted " + messageItemId);
-                        this.deletedItemIdArray.push(messageItemId);
-                    }
-                }).catch((error) => {
-                    console.error(error);
-                    return false;
-                });
+                console.error("status code not 200");
+                localStorage.setItem('deleted_messages_ids', this.deletedItemIdArray);
+                return false;
             }
 
         }
