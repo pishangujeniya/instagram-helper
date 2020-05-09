@@ -260,6 +260,7 @@ class InstagramHelper {
 
         }
 
+        localStorage.setItem('deleted_messages_ids', this.deletedItemIdArray);
         console.warn("All Messages Deleted");
         return true;
     }
