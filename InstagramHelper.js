@@ -30,6 +30,11 @@ class InstagramHelper {
         this.stopDeletingMessages = false;
     }
 
+    syncWait = ms => {
+        const end = Date.now() + ms
+        while (Date.now() < end) continue
+    }
+
     /**
      * imports messages ids
      * @param {string} comma_separated_string array of ids command separated string
@@ -282,13 +287,15 @@ class InstagramHelper {
                             console.error("Try again tomorrow");
                             throw response.status;
                         } else {
-                            console.info("Deleted " + messageItemId);
+                            console.info("Deleted");
                             this.deletedItemIdArray.push(messageItemId);
                         }
                     }).catch((error) => {
                         console.error(error);
                         return false;
                     });
+
+                    this.syncWait(5500);
                 }
             } else {
                 console.error("status code not 200");

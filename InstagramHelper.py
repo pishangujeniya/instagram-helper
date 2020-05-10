@@ -18,21 +18,25 @@ class InstagramHelper:
 
     def __init__(self):
         self.CUSTOM_JS_LINK = "https://test.pishangujeniya.com/InstagramHelper.js"
-        self.INSTAGRAM_USERNAME = ""
-        self.INSTAGRAM_PASSWORD = ""
+        self.INSTAGRAM_USERNAME = "your_username"
+        self.INSTAGRAM_PASSWORD = "your_password"
         self.CHROME_DRIVER_PATH = "C:/Program Files (x86)/chrome_driver/chromedriver.exe"
         self.CHROME_TEMP_USER_DIRECTORY = "C:\chrome_user_data"
         self.PAGE_LOAD_WAIT_TIME = 30000
         self.MESSAGES_ID_CSV_DIRECTORY_PATH = "./CSV/"
         self.MESSAGES_ID_CSV_FILE_NAME = "messages_ids.csv"
         self.DELETED_MESSAGES_ID_CSV_FILE_NAME = "deleted_messages_ids.csv"
-        self.THREAD_ID = "340282366841710300949128118779027450720"
+        self.THREAD_ID = "123456789123456789123456789123456789"
+        # Deep
         from selenium.webdriver.chrome.options import Options
         chrome_options = Options()
         chrome_options.add_argument("--user-data-dir=" + self.CHROME_TEMP_USER_DIRECTORY)
         chrome_options.add_argument("--disable-web-security")
+        chrome_options.add_argument("--window-size=1920,1080")
+        chrome_options.add_argument('--start-maximized')
         self.driver = webdriver.Chrome(self.CHROME_DRIVER_PATH, options=chrome_options)
         self.driver.implicitly_wait(self.PAGE_LOAD_WAIT_TIME)
+        self.driver.set_script_timeout(time_to_wait=5000000000000)
         self.DEFAULT_APP_ID_NAME = "instagramWebFBAppId"
         self.APP_ID_VARIABLE_NAMES = {
             "instagramFBAppId": "",
@@ -56,6 +60,7 @@ class InstagramHelper:
         self.driver.delete_all_cookies()
         time.sleep(1)
         self.driver.get("https://instagram.com")
+        time.sleep(5)
 
     def get_cookie_string(self):
         return self.driver.execute_script("return document.cookie")
@@ -106,7 +111,7 @@ class InstagramHelper:
         custom_script = 'var my_awesome_script = document.createElement("script");my_awesome_script.setAttribute("src","' + js_file_link + "?" + str(
             current_milli_time()) + '");document.head.appendChild(my_awesome_script);'
         self.driver.execute_script(custom_script)
-        time.sleep(1)
+        time.sleep(5)
 
     def load_custom_js(self, js_file_path: str):
         f = open(js_file_path, "r")
@@ -115,12 +120,17 @@ class InstagramHelper:
             js_file_contents = str(contents)
             custom_script = "var my_awesome_script=document.createElement('script');my_awesome_script.setAttribute('type','text/javascript');my_awesome_script.innerHTML=\"" + js_file_contents + "\";document.head.appendChild(my_awesome_script);"
             self.driver.execute_script(custom_script)
-        time.sleep(1)
+        time.sleep(5)
 
     def get_messages_js(self, thread_id: str):
-        custom_script = "var ig=new InstagramHelper();ig.stopGettingMessages=false;var getMessages=await ig.getAllMessageIds('" + str(
-            thread_id) + "');return getMessages;"
-        return self.driver.execute_script(custom_script)
+        try:
+            custom_script = "var ig=new InstagramHelper();ig.stopGettingMessages=false;var getMessages=await ig.getAllMessageIds('" + str(
+                thread_id) + "');return getMessages;"
+            return self.driver.execute_script(custom_script)
+        except:
+            print("Exception Occurred in Executing Script")
+        finally:
+            return True
 
     def export_messages_ids_js(self):
         custom_script = "var ig=new InstagramHelper();return ig.exportMessagesIds();"
@@ -135,9 +145,15 @@ class InstagramHelper:
         df.to_csv(output_path_final)
 
     def delete_messages_js(self, thread_id: str):
-        custom_script = "var ig=new InstagramHelper();ig.stopDeletingMessages=false;var deleteMessages=await ig.deleteAllMessages('" + str(
-            thread_id) + "');return deleteMessages;"
-        return self.driver.execute_script(custom_script)
+        try:
+            custom_script = "var ig=new InstagramHelper();ig.stopDeletingMessages=false;var deleteMessages=await ig.deleteAllMessages('" + str(
+                thread_id) + "');return deleteMessages;"
+            return self.driver.execute_script(custom_script)
+        except:
+            print("Exception Occurred in Executing Script")
+            return False
+        finally:
+            return False
 
     def export_deleted_messages_ids_js(self):
         custom_script = "var ig=new InstagramHelper();return ig.exportDeletedMessagesIds();"
@@ -155,7 +171,7 @@ class InstagramHelper:
 def main():
     ig = InstagramHelper()
 
-    if False:
+    if True:
         # region GET MESSAGES
         ig.logout()
         ig.login(ig.INSTAGRAM_USERNAME, ig.INSTAGRAM_PASSWORD)
@@ -172,16 +188,7 @@ def main():
 
     if True:
         # region DELETE MESSAGES
-        ig.logout()
-        ig.login(ig.INSTAGRAM_USERNAME, ig.INSTAGRAM_PASSWORD)
-        ig.load_remote_js(js_file_link=ig.CUSTOM_JS_LINK)
-        delete_messages = ig.delete_messages_js(thread_id=ig.THREAD_ID)
-        if delete_messages:
-            print("All messages deleted")
-        else:
-            print("Some messages failed to delete")
-            print("Exporting deleted messages to CSV")
-            ig.export_deleted_messages_ids_js_csv()
+        delete_messages = False
         while delete_messages is not True:
             ig.logout()
             ig.login(ig.INSTAGRAM_USERNAME, ig.INSTAGRAM_PASSWORD)
@@ -191,8 +198,10 @@ def main():
                 print("All messages deleted")
             else:
                 print("Some messages failed to delete")
-                print("Exporting deleted messages to CSV")
-                ig.export_deleted_messages_ids_js_csv()
+
+            print("Exporting deleted messages to CSV")
+            ig.export_deleted_messages_ids_js_csv()
+            time.sleep(600)
         # endregion
 
 
