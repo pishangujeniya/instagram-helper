@@ -13,7 +13,7 @@ This JavaScript has helper methods to perform various tasks automation.
 4. Open any chat and then see the link should be such as (https://www.instagram.com/direct/t/xxxx)
 5. Note and copy the last long numerical digits from link to some notepad.
 6. Those digits is your chat thread Id.
-7. Now Copy the `InstagramHelper.js` file contents and paste it in `Console` tab
+7. Now Copy the [InstagramHelper.js](https://github.com/pishangujeniya/instagram-helper/blob/master/InstagramHelper.js) file contents and paste it in `Console` tab
 8. Run the following code
 
 ```javascript
