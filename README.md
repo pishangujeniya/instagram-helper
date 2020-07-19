@@ -47,3 +47,21 @@ If it worked for you, star it.
 ### Upcoming features !!!
 
 1. Get list of media sent, and unsend selected medias only. (such as video, audio, photos).
+
+
+## Script created & Maintained by
+
+[Pishang Ujeniya](https://github.com/pishangujeniya)
+
+<a href="https://www.linkedin.com/in/pishangujeniya"><img src="https://github.com/aritraroy/social-icons/blob/master/linkedin-icon.png?raw=true" width="60"></a> <a href="https://twitter.com/pishangujeniya"><img src="https://github.com/aritraroy/social-icons/blob/master/twitter-icon.png?raw=true" width="60"></a>  <a href="https://www.facebook.com/pitbox"><img src="https://github.com/aritraroy/social-icons/blob/master/facebook-icon.png?raw=true" width="60"></a> <a href="https://www.instagram.com/pishang7"><img src="https://github.com/aritraroy/social-icons/blob/master/instagram-icon.png?raw=true" width="60"></a>
+
+> If you are happy to use this project and found this project helpful for you as well as others or you learned something from the source code of this project and want to thank me, 
+
+- Be a [Stargazer](https://github.com/pishangujeniya/instagram-helper) to this repository.
+- Share with your friends and colleagues.
+- Follow and Endorse me on [linkedin](https://www.linkedin.com/in/pishangujeniya).
+
+## Donations
+
+- [PayPal](https://paypal.me/Pishang)
+
