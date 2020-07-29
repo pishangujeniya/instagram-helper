@@ -19,19 +19,29 @@ This JavaScript has helper methods to perform various tasks automation.
 ```javascript
 
 var ig  = new InstagramHelper();
-ig.getAllMessageIds("your_chat_thread_Id");
+ig.startUnsending("your_chat_thread_Id");
 
 ```
-9. After that you will see **getting messages...** displayed in the console window.
-10. As soon as it says **All Messages fetched, No More messages to fetch**, run the following code.
+
+9. After that you will see **getting messages...** displayed in the console window and **Deleting...** will be displayed whenever it starts deleting.
+10. At the end it will show **All messages deleted.**, So you have unsended every message that you sent.
+
+11. If you want to confirm if any of the messages are skipped or left to delete then you can run the following to get the number of messages that you send which are not yet deleted.
 
 ```javascript
 
-ig.deleteAllMessages("your_chat_thread_Id");
+var ig  = new InstagramHelper();
+ig.getAllMessageIds("your_chat_thread_Id");
+
+```
+After it says **All Messages fetched, No More messages to fetch**, run the following code to get the number of messages which are yet to delete.
+
+```javascript
+
+console.log(ig.p_itemsIdArray.length);
 
 ```
 
-11. It will start unsending deleting the messages.
 12. Deleting messages is kept intentionally slow because Instagram has limit to delete number of messages in per second.
 > If we delete fastly then Instagram servers detects it as bot and then unsending is not allowed with the session temporarily, until you logout and relogin. So to avoid getting detected, we have kept a delay in the code to delete messages with specific interval of time.
 
@@ -40,6 +50,17 @@ ig.deleteAllMessages("your_chat_thread_Id");
 > It is very tedious and time consuming process, but efficient and better than doing it manually. One can simply open a new chrome browser window and follow the simple steps and minimise it.
 
 > I am trying to keep this script updated to latest Instagram codes, so as to not have any issues further.
+
+### FAQ
+
+#### Getting errors displayed in console while running the code
+- There might be some errors related to Instagram site, not every error displayed on console are from our script.
+- If error persists and repeats everytime, then close browser logout and relogin and then try running the code.
+
+#### Getting too often "Try again tomorrow" Error or 429 Response Code?
+- Try to close the browser re-open Instagram and logout then login.
+- In the step 8 instead of running this `ig.startUnsending("your_chat_thread_Id");` run with more higher number of delay by default it is 3500 milliseconds, try other values like 4500, 5500, 6500 `ig.startUnsending("your_chat_thread_Id",5500);`
+
 
 ### Star it!
 If it worked for you, star it.
