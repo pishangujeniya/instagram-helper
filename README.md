@@ -1,6 +1,7 @@
 # Instagram Helper Script
 > Instagram Scripts for various tasks automation
 
+![Instagram Helper](https://user-images.githubusercontent.com/25280661/90143326-1e862a80-dd9b-11ea-9d6f-9365617c8ea1.png)
 
 This JavaScript has helper methods to perform various tasks automation.
 
