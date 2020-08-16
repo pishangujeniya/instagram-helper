@@ -5,7 +5,7 @@
 
 This JavaScript has helper methods to perform various tasks automation.
 
-### How to delete all messages?
+### How to delete/unsend all messages?
 
 
 1. Open Chrome Browser
@@ -62,6 +62,8 @@ console.log(ig.p_itemsIdArray.length);
 - Try to close the browser re-open Instagram and logout then login.
 - In the step 8 instead of running this `ig.startUnsending("your_chat_thread_Id");` run with more higher number of delay by default it is 3500 milliseconds, try other values like 4500, 5500, 6500 `ig.startUnsending("your_chat_thread_Id",5500);`
 
+#### How to stop unsending process?
+- Refresh the browser or Close the browser or Restart the computer.
 
 ### Star it!
 If it worked for you, star it.
@@ -70,6 +72,8 @@ If it worked for you, star it.
 
 1. Get list of media sent, and unsend selected medias only. (such as video, audio, photos).
 
+### Warning
+> The script or the creator is in any ways not reponsibile for any of your actions. Do at your own risk.
 
 ## Script created & Maintained by
 
