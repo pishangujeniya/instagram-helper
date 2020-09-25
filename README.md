@@ -70,7 +70,7 @@ If it worked for you, star it.
 
 ### Upcoming features !!!
 
-1. Get list of media sent, and unsend selected medias only. (such as video, audio, photos).
+1. Get list of media sent, and unsend selected medias only. (such as video, photos).
 
 ### Warning
 > The script or the creator is in any ways not reponsibile for any of your actions. Do at your own risk.
