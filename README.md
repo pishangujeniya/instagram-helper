@@ -1,3 +1,22 @@
+![NOT WORKING](https://i.pinimg.com/564x/f8/b1/29/f8b12901ffd51b9794669dc8a66db08c.jpg)
+
+# THIS SCRIPT IS CURRENTLY NOT WORKING, AS INSTAGRAM HAS UPDATED.
+## I AM WORKING ON NEW UPDATED SCRIPT, WILL BE RELEASED SOON... KEEP CHECKING
+### Mark as WATCH & STAR the Repository to stay updated. 
+
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+
 # Instagram Helper Script
 > Instagram Scripts for various tasks automation
 
