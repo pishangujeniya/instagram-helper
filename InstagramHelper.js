@@ -36,32 +36,6 @@ class InstagramHelper {
     }
 
     /**
-     * imports messages ids
-     * @param {string} comma_separated_string array of ids command separated string
-     */
-    importMessagesIds(comma_separated_string) {
-        localStorage.setItem('messages_ids', comma_separated_string);
-        this.p_itemsIdArray = localStorage.getItem('messages_ids').split(',');
-    }
-
-    /**
-     * imports deleted messages ids
-     * @param {string} comma_separated_string array of ids command separated string
-     */
-    importDeletedMessagesIds(comma_separated_string) {
-        localStorage.setItem('deleted_messages_ids', comma_separated_string);
-        this.deletedItemIdArray = localStorage.getItem('deleted_messages_ids').split(',');
-    }
-
-    exportMessagesIds() {
-        return localStorage.getItem('messages_ids').split(',');
-    }
-
-    exportDeletedMessagesIds() {
-        return localStorage.getItem('deleted_messages_ids').split(',');
-    }
-
-    /**
      * provides cookie value if exists else provides empty string
      * @param {string} c_name cookie key name
      */
@@ -96,9 +70,9 @@ class InstagramHelper {
 
     /**
      * provides the ConsumerLibCommon Js File
-     * @param {string} jsFileName default is 759be62fac48.js
+     * @param {string} jsFileName default is d7e6aac102d8.js
      */
-    async getConsumerLibCommonsJs(jsFileName = "759be62fac48.js") {
+    async getConsumerLibCommonsJs(jsFileName = "d7e6aac102d8.js") {
 
         let consumerLibCommonsJsRequestUrl = "https://www.instagram.com/static/bundles/es6/ConsumerLibCommons.js/" + jsFileName;
         let consumerLibCommonsJsRequestInit = {
@@ -166,7 +140,8 @@ class InstagramHelper {
         // if its first message ever sent then stop else continue
         while (this.p_prevCursor != "MINCURSOR" && this.stopGettingMessages == false) {
 
-            var getMessageAPIUrl = "https://www.instagram.com/direct_v2/web/threads/" + threadId + "/";
+            // var getMessageAPIUrl = "https://www.instagram.com/direct_v2/web/threads/" + threadId + "/";
+            var getMessageAPIUrl = "https://i.instagram.com/api/v1/direct_v2/threads/" + threadId + "/";
             if (this.p_oldestCursor != undefined && this.p_oldestCursor != null && this.p_oldestCursor.length > 0) {
                 getMessageAPIUrl = getMessageAPIUrl + "?cursor=" + this.p_oldestCursor + "";
             }
@@ -231,85 +206,6 @@ class InstagramHelper {
         return true;
     }
 
-    /**
-     * unsends all messages
-     */
-    async deleteAllMessages(threadId) {
-
-        if (threadId == null || threadId == undefined) {
-            console.error("threadId must be passed");
-            return false;
-        }
-
-        let threadLink = "https://www.instagram.com/direct/t/" + threadId;
-
-        let previous_status_code = 200;
-
-        for (let itemIndex = 0; (itemIndex < this.p_itemsIdArray.length && this.stopDeletingMessages == false); itemIndex++) {
-
-            if (previous_status_code == 200) {
-
-                const messageItemId = this.p_itemsIdArray[itemIndex];
-
-                if (this.deletedItemIdArray.includes(messageItemId) || messageItemId.length < 1) {
-                    console.info("Already deleted");
-                } else {
-                    var p_unsendRequestInitObj = {
-                        "credentials": "include",
-                        "credentials": "include",
-                        "headers": {
-                            "accept": "*/*",
-                            "accept-language": "en-US,en;q=0.9",
-                            "cache-control": "no-cache",
-                            "content-type": "application/x-www-form-urlencoded",
-                            "pragma": "no-cache",
-                            "sec-fetch-dest": "empty",
-                            "sec-fetch-mode": "cors",
-                            "sec-fetch-site": "same-origin",
-                            "x-csrftoken": this.getCookie("csrftoken"),
-                            "x-ig-app-id": localStorage.getItem("instagramWebFBAppId"),
-                            "x-ig-www-claim": sessionStorage.getItem("www-claim-v2"),
-                            "x-requested-with": "XMLHttpRequest"
-                        },
-                        "referrer": threadLink,
-                        "referrerPolicy": "no-referrer-when-downgrade",
-                        "body": null,
-                        "method": "POST",
-                        "mode": "cors"
-                    };
-
-                    await fetch(
-                        "https://www.instagram.com/direct_v2/web/threads/" + threadId + "/items/" + messageItemId + "/delete/",
-                        p_unsendRequestInitObj
-                    ).then((response) => {
-                        previous_status_code = response.status;
-                        if (response.status != 200) {
-                            console.error("Try again tomorrow");
-                            throw response.status;
-                        } else {
-                            console.info("Deleted");
-                            this.deletedItemIdArray.push(messageItemId);
-                        }
-                    }).catch((error) => {
-                        console.error(error);
-                        return false;
-                    });
-
-                    this.syncWait(5500);
-                }
-            } else {
-                console.error("status code not 200");
-                localStorage.setItem('deleted_messages_ids', this.deletedItemIdArray);
-                return false;
-            }
-
-        }
-
-        localStorage.setItem('deleted_messages_ids', this.deletedItemIdArray);
-        console.warn("All Messages Deleted");
-        return true;
-    }
-
     async startUnsending(threadId, delay = 3500) {
         if (threadId == null || threadId == undefined) {
             console.error("threadId must be passed");
@@ -323,7 +219,7 @@ class InstagramHelper {
         // if its first message ever sent then stop else continue
         while (this.p_prevCursor != "MINCURSOR") {
 
-            var getMessageAPIUrl = "https://www.instagram.com/direct_v2/web/threads/" + threadId + "/";
+            var getMessageAPIUrl = "https://i.instagram.com/api/v1/direct_v2/threads/" + threadId + "/";
             if (this.p_oldestCursor != undefined && this.p_oldestCursor != null && this.p_oldestCursor.length > 0) {
                 getMessageAPIUrl = getMessageAPIUrl + "?cursor=" + this.p_oldestCursor + "";
             }
@@ -381,7 +277,6 @@ class InstagramHelper {
 
                         var p_unsendRequestInitObj = {
                             "credentials": "include",
-                            "credentials": "include",
                             "headers": {
                                 "accept": "*/*",
                                 "accept-language": "en-US,en;q=0.9",
@@ -404,7 +299,7 @@ class InstagramHelper {
                         };
 
                         await fetch(
-                            "https://www.instagram.com/direct_v2/web/threads/" + threadId + "/items/" + messageItemId + "/delete/",
+                            "https://i.instagram.com/api/v1/direct_v2/threads/" + threadId + "/items/" + messageItemId + "/delete/",
                             p_unsendRequestInitObj
                         ).then((response) => {
                             if (response.status != 200) {
