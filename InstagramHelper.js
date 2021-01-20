@@ -332,4 +332,20 @@ class InstagramHelper {
 
     }
 
+    /**
+     * Deletes all the follow requests for private account
+     * @param {string} deleteButtonCSSClassName | provide the css class name of Delete button by Inspect Element
+     */
+    async deleteAllFollowRequests(deleteButtonCSSClassName) {
+
+        let t = document.getElementsByClassName(deleteButtonCSSClassName);
+
+        for (let index = 0; index < t.length; index++) {
+            const element = t[index];
+            this.syncWait(1000);
+            element.click();
+        }
+
+    }
+
 }
