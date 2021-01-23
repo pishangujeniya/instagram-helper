@@ -1,7 +1,7 @@
 # Instagram Helper Script
 > Instagram Scripts for various tasks automation
 
-![Instagram Helper](https://user-images.githubusercontent.com/25280661/90143326-1e862a80-dd9b-11ea-9d6f-9365617c8ea1.png)
+![Instagram Helper](./images/90143326-1e862a80-dd9b-11ea-9d6f-9365617c8ea1.png)
 
 This JavaScript has helper methods to perform various tasks automation.
 
@@ -90,7 +90,7 @@ If it worked for you, star it.
 
 [Pishang Ujeniya](https://github.com/pishangujeniya)
 
-<a href="https://www.linkedin.com/in/pishangujeniya"><img src="https://github.com/aritraroy/social-icons/blob/master/linkedin-icon.png?raw=true" width="60"></a> <a href="https://twitter.com/pishangujeniya"><img src="https://github.com/aritraroy/social-icons/blob/master/twitter-icon.png?raw=true" width="60"></a>  <a href="https://www.facebook.com/pitbox"><img src="https://github.com/aritraroy/social-icons/blob/master/facebook-icon.png?raw=true" width="60"></a> <a href="https://www.instagram.com/pishang7"><img src="https://github.com/aritraroy/social-icons/blob/master/instagram-icon.png?raw=true" width="60"></a>
+<a href="https://www.linkedin.com/in/pishangujeniya"><img src="https://github.com/aritraroy/social-icons/blob/master/linkedin-icon.png?raw=true" width="60"></a> <a href="https://twitter.com/pishangujeniya"><img src="https://github.com/aritraroy/social-icons/blob/master/twitter-icon.png?raw=true" width="60"></a> <a href="https://www.instagram.com/pishang.ujeniya"><img src="https://github.com/aritraroy/social-icons/blob/master/instagram-icon.png?raw=true" width="60"></a>
 
 > If you are happy to use this project and found this project helpful for you as well as others or you learned something from the source code of this project and want to thank me, 
 
@@ -101,4 +101,6 @@ If it worked for you, star it.
 ## Donations
 
 - [PayPal](https://paypal.me/Pishang)
+
+<a href="https://paypal.me/Pishang"><img src="./images/9218.jpg"></a>
 
