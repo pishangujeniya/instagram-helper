@@ -1,22 +1,3 @@
-![NOT WORKING](https://i.pinimg.com/564x/f8/b1/29/f8b12901ffd51b9794669dc8a66db08c.jpg)
-
-# THIS SCRIPT IS CURRENTLY NOT WORKING, AS INSTAGRAM HAS UPDATED.
-## I AM WORKING ON NEW UPDATED SCRIPT, WILL BE RELEASED SOON... KEEP CHECKING
-### Mark as WATCH & STAR the Repository to stay updated. 
-
-<hr>
-<hr>
-<hr>
-<hr>
-<hr>
-<hr>
-<hr>
-<hr>
-<hr>
-<hr>
-<hr>
-<hr>
-
 # Instagram Helper Script
 > Instagram Scripts for various tasks automation
 
@@ -27,14 +8,20 @@ This JavaScript has helper methods to perform various tasks automation.
 ### How to delete/unsend all messages?
 
 
-1. Open Chrome Browser
-2. Open [Instagram.com](https://instagram.com)
-3. Press `F12` (Developer Tools) or `Ctrl+Shift+I`
-4. Open any chat and then see the link should be such as (https://www.instagram.com/direct/t/xxxx)
-5. Note and copy the last long numerical digits from link to some notepad.
-6. Those digits is your chat thread Id.
-7. Now Copy the [InstagramHelper.js](https://github.com/pishangujeniya/instagram-helper/blob/master/InstagramHelper.js) file contents and paste it in `Console` tab
-8. Run the following code
+1. Install [Chrome Browser](https://www.google.com/intl/en_in/chrome/)
+2. Open Notepad
+3. Copy all the code from [InstagramHelperChrome.js](./InstagramHelperChrome.js) file and paste in the notepad.
+4. Save the notepad file with `InstagramHelperChrome.js` name on Desktop (".js" at the end of file extension is needed)
+5. Double Click the file `InstagramHelperChrome.js`
+6. This file will then generate a Chrome Shortcut on your Desktop with name `InstagramHelperChrome`
+7. Open that Special Chrome Browser using that shortcut.
+8. Open [Instagram.com](https://instagram.com)
+9. Press `F12` (Developer Tools) or `Ctrl+Shift+I`
+10. Open any chat and then see the link should be such as (https://www.instagram.com/direct/t/xxxx)
+11. Note and copy the last long numerical digits from link to some notepad.
+12. Those digits is your chat thread Id.
+13. Now Copy the [InstagramHelper.js](https://github.com/pishangujeniya/instagram-helper/blob/master/InstagramHelper.js) file contents and paste it in `Console` tab
+14. Run the following code
 
 ```javascript
 
