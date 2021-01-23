@@ -5,6 +5,11 @@
 
 This JavaScript has helper methods to perform various tasks automation.
 
+### Requirements
+
+1. Windows 7/8/10
+2. Chrome Browser
+
 ### How to delete/unsend all messages?
 
 
