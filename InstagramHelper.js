@@ -206,6 +206,49 @@ class InstagramHelper {
         return true;
     }
 
+    async getInboxRequest() {
+
+        var getInboxRequestUrl = "https://i.instagram.com/api/v1/direct_v2/inbox/?persistentBadging=true&folder=&limit=10&thread_message_limit=10";
+
+        var getInboxRequestInit = {
+            "headers": {
+                "accept": "*/*",
+                "accept-language": "en-US,en;q=0.9",
+                "cache-control": "no-cache",
+                "pragma": "no-cache",
+                "sec-fetch-dest": "empty",
+                "sec-fetch-mode": "cors",
+                "sec-fetch-site": "same-site",
+                "x-ig-app-id": localStorage.getItem("instagramWebFBAppId"),
+                "x-ig-www-claim": sessionStorage.getItem("www-claim-v2")
+            },
+            "referrer": "https://www.instagram.com/",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "body": null,
+            "method": "GET",
+            "mode": "cors",
+            "credentials": "include"
+        };
+
+        await fetch(
+            getInboxRequestUrl,
+            getInboxRequestInit
+        )
+            .then(async (response) => {
+                if (response.status != 200) {
+                    console.error("Try again tomorrow");
+                } else {
+                    return response.json();
+                }
+            })
+            .then(async (data) => {
+                console.log(data);
+            }).catch((error) => {
+                console.error(error);
+            });
+
+    }
+
     async startUnsending(threadId, delay = 3500) {
         if (threadId == null || threadId == undefined) {
             console.error("threadId must be passed");
