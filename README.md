@@ -22,6 +22,9 @@ This JavaScript has helper methods to perform various tasks automation.
 7. Open that Special Chrome Browser using that shortcut.
 8. Open [Instagram.com](https://instagram.com)
 9. Press `F12` (Developer Tools) or `Ctrl+Shift+I`
+
+**You can use [InstagramHelperQuick.js](./InstagramHelperQuick.js) contents and paste it in the `Console` tab to immediately begin deletion. Skip steps 10-14.**
+
 10. Open any chat and then see the link should be such as (https://www.instagram.com/direct/t/xxxx)
 11. Note and copy the last long numerical digits from link to some notepad.
 12. Those digits is your chat thread Id.
