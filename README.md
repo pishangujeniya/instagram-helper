@@ -10,9 +10,7 @@ This JavaScript has helper methods to perform various tasks automation.
 1. Windows 7/8/10
 2. Chrome Browser
 
-### How to delete/unsend all messages?
-
-
+### How to delete/unsend all messages? ⁉
 1. Install [Chrome Browser](https://www.google.com/intl/en_in/chrome/)
 2. Open Notepad
 3. Copy all the code from [InstagramHelperChrome.js](./InstagramHelperChrome.js) file and paste in the notepad.
@@ -22,74 +20,53 @@ This JavaScript has helper methods to perform various tasks automation.
 7. Open that Special Chrome Browser using that shortcut.
 8. Open [Instagram.com](https://instagram.com)
 9. Press `F12` (Developer Tools) or `Ctrl+Shift+I`
-
-**You can use [InstagramHelperQuick.js](./InstagramHelperQuick.js) contents and paste it in the `Console` tab to immediately begin deletion. Skip steps 10-14.**
-
 10. Open any chat and then see the link should be such as (https://www.instagram.com/direct/t/xxxx)
 11. Note and copy the last long numerical digits from link to some notepad.
 12. Those digits is your chat thread Id.
 13. Now Copy the [InstagramHelper.js](./InstagramHelper.js) file contents and paste it in `Console` tab
-14. Run the following code
-
-```javascript
-
-var ig  = new InstagramHelper();
-ig.startUnsending("your_chat_thread_Id");
-
-```
-
-9. After that you will see **getting messages...** displayed in the console window and **Deleting...** will be displayed whenever it starts deleting.
-10. At the end it will show **All messages deleted.**, So you have unsended every message that you sent.
-
-11. If you want to confirm if any of the messages are skipped or left to delete then you can run the following to get the number of messages that you send which are not yet deleted.
-
-```javascript
-
-var ig  = new InstagramHelper();
-ig.getAllMessageIds("your_chat_thread_Id");
-
-```
-After it says **All Messages fetched, No More messages to fetch**, run the following code to get the number of messages which are yet to delete.
-
-```javascript
-
-console.log(ig.p_itemsIdArray.length);
-
-```
-
-12. Deleting messages is kept intentionally slow because Instagram has limit to delete number of messages in per second.
-> If we delete fastly then Instagram servers detects it as bot and then unsending is not allowed with the session temporarily, until you logout and relogin. So to avoid getting detected, we have kept a delay in the code to delete messages with specific interval of time.
-
-13. As and when it says **All Messages Deleted** it has deleted all the messages in the chat.
-
-> It is very tedious and time consuming process, but efficient and better than doing it manually. One can simply open a new chrome browser window and follow the simple steps and minimise it.
-
-> I am trying to keep this script updated to latest Instagram codes, so as to not have any issues further.
+14. Copy Paste the following code in Console and Hit Enter
+15. ```javascript
+    var ig  = new InstagramHelper();
+    ig.startUnsending("your_chat_thread_Id");
+    ```
+16. After that you will see **getting messages...** displayed in the console window and **Deleting...** will be displayed whenever it starts deleting.
+17. At the end it will show **All messages deleted.**, So you have unsended every message that you sent.
+18. If you want to confirm if any of the messages are skipped or left to delete then you can run the following to get the number of messages that you send which are not yet deleted. 
+19. ```javascript
+    var ig  = new InstagramHelper();
+    ig.getAllMessageIds("your_chat_thread_Id");
+    ```
+20. After it says **All Messages fetched, No More messages to fetch**, run the following code to get the number of messages which are yet to delete.
+21. ```javascript
+    console.log(ig.p_itemsIdArray.length);
+    ```
+22. Deleting messages is kept intentionally slow because Instagram has limit to delete number of messages in per second.
+23. > If we delete fastly then Instagram servers detects it as bot and then unsending is not allowed with the session temporarily, until you logout and relogin. So to avoid getting detected, we have kept a delay in the code to delete messages with specific interval of time.
+24. As and when it says **All Messages Deleted** it has deleted all the messages in the chat.
+25. > It is very tedious and time consuming process, but efficient and better than doing it manually. One can simply open a new chrome browser window and follow the simple steps and minimise it.
 
 ### FAQ
 
-#### Getting errors displayed in console while running the code
+#### Getting errors displayed in console while running the code 😖
 - There might be some errors related to Instagram site, not every error displayed on console are from our script.
 - If error persists and repeats everytime, then close browser logout and relogin and then try running the code.
 
-#### Getting too often "Try again tomorrow" Error or 429 Response Code?
+#### Getting too often "Try again tomorrow" Error or 429 Response Code? 😵
 - Try to close the browser re-open Instagram and logout then login.
-- In the step 8 instead of running this `ig.startUnsending("your_chat_thread_Id");` run with more higher number of delay by default it is 3500 milliseconds, try other values like 4500, 5500, 6500 `ig.startUnsending("your_chat_thread_Id",5500);`
+- Instead of running this `ig.startUnsending("your_chat_thread_Id");` run with more higher number of delay by default it is 3500 milliseconds, try other values like 4500, 5500, 6500 `ig.startUnsending("your_chat_thread_Id",5500);`
 
-#### How to stop unsending process?
+#### How to stop unsending process? 🛑
 - Refresh the browser or Close the browser or Restart the computer.
 
-### Star it!
-If it worked for you, star it.
 
-### Upcoming features !!!
+### Upcoming features !!! 🆕
 
 1. Get list of media sent, and unsend selected medias only. (such as video, photos).
 
-### Warning
+### Warning ⚠
 > The script or the creator is in any ways not reponsibile for any of your actions. Do at your own risk.
 
-## Script created & Maintained by
+## Script created & Maintained by 💪
 
 [Pishang Ujeniya](https://github.com/pishangujeniya)
 
@@ -101,9 +78,13 @@ If it worked for you, star it.
 - Share with your friends and colleagues.
 - Follow and Endorse me on [linkedin](https://www.linkedin.com/in/pishangujeniya).
 
-## Donations
-
+## Donations 💰
+*Star it!* ⭐ If it worked for you.
 - [PayPal](https://paypal.me/Pishang)
+
+### Donors 😍
+1. Laila Gates
+2. Nikita Rvachev
 
 <a href="https://paypal.me/Pishang"><img src="./images/9218.jpg"></a>
 

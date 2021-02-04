@@ -249,10 +249,10 @@ class InstagramHelper {
 
     }
 
-    async startUnsending(threadId, delay = 3500) {
+    async startUnsending(threadId = undefined, delay = 3500) {
         if (threadId == null || threadId == undefined) {
-            console.error("threadId must be passed");
-            return false;
+            var threadId = window.location.href.split('/')[5]; // Get the chat id automatically from the url, make sure a chat is currently active
+            console.warn("Starting deleting from thread Id : " + threadId);
         }
 
         console.warn("Inevitable");
