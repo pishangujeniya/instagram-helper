@@ -7,7 +7,7 @@ This JavaScript has helper methods to perform various tasks automation.
 
 ### Requirements
 
-1. Windows 7/8/10
+1. Windows 7/8/10 (Are you MacOS or Linux user? [Help](https://github.com/pishangujeniya/instagram-helper/issues/22#issuecomment-774589015))
 2. Chrome Browser
 
 ### How to delete/unsend all messages? ⁉
