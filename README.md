@@ -15,7 +15,7 @@ This JavaScript has helper methods to perform various tasks automation.
 2. Open Notepad
 3. Copy all the code from [InstagramHelperChrome.js](./InstagramHelperChrome.js) file and paste in the notepad.
 4. Save the notepad file with `InstagramHelperChrome.js` name on Desktop (".js" at the end of file extension is needed)
-5. Double Click the file `InstagramHelperChrome.js`
+5. Double Click the file `InstagramHelperChrome.js` _(This js file is not to be run into browser or browser console)_
 6. This file will then generate a Chrome Shortcut on your Desktop with name `InstagramHelperChrome`
 7. Open that Special Chrome Browser using that shortcut.
 8. Open [Instagram.com](https://instagram.com)
