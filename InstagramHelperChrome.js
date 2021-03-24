@@ -30,15 +30,18 @@ var systemDriveLetter = "C"; // Change this letter to your Windows System Drive 
 var folderName = "InstagramHelperTemp"; // Change this letter to your folder name which you created in root path of your Windows System drive.
 var chromeInstalledPath = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"; // Path to the Chrome.exe file installed in your Windows System.
 var instagramHelperChromeDirectoryPath = systemDriveLetter + ":\\" + folderName;
+var shortCutFileName = "InstagramHelperChrome.lnk";
 
 
 var tempDirectoryPath = Shell.ExpandEnvironmentStrings("%TEMP%");
 instagramHelperChromeDirectoryPath = tempDirectoryPath + "\\" + folderName;
 var specialArguments = "--disable-web-security --disable-gpu --user-data-dir=\"" + instagramHelperChromeDirectoryPath + "\"";
 DesktopPath = Shell.SpecialFolders("Desktop");
-link = Shell.CreateShortcut(DesktopPath + "\\InstagramHelperChrome.lnk");
+link = Shell.CreateShortcut(DesktopPath + "\\" + shortCutFileName);
 link.Arguments = specialArguments;
 link.Description = "Instagram Helper Chrome";
 link.TargetPath = chromeInstalledPath
 link.Save();
 //#endregion Special Chrome Shortcut Creation
+
+Shell.Popup("See Desktop, a new shortcut " + shortCutFileName + " is created");
