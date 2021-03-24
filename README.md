@@ -11,39 +11,38 @@ This JavaScript has helper methods to perform various tasks automation.
 2. Chrome Browser
 
 ### How to delete/unsend all messages? ⁉
-1. Install [Chrome Browser](https://www.google.com/intl/en_in/chrome/)
-2. Open Notepad
-3. Copy everything from inside the [InstagramHelperChrome.js](./InstagramHelperChrome.js) file and paste in the notepad. (Note: Not to paste in browser)
-4. Save the notepad file with `InstagramHelperChrome.js` name on Desktop (".js" at the end of file extension is needed)
-5. Double Click the file `InstagramHelperChrome.js` _(This js file is not to be run into browser or browser console)_
-6. This file will then generate a Chrome Shortcut on your Desktop with name `InstagramHelperChrome`
-7. Open that Special Chrome Browser using that shortcut.
-8. Open [Instagram.com](https://instagram.com)
-9. Press `F12` (Developer Tools) or `Ctrl+Shift+I`
-10. Open any chat and then see the link should be such as (https://www.instagram.com/direct/t/xxxx)
-11. Note and copy the last long numerical digits from link to some notepad.
-12. Those digits is your chat thread Id.
-13. Now Copy the [InstagramHelper.js](./InstagramHelper.js) file contents and paste it in `Console` tab
-14. Copy Paste the following code in Console and Hit Enter
-15. ```javascript
+- Install [Chrome Browser](https://www.google.com/intl/en_in/chrome/)
+- Open [https://github.com/pishangujeniya/instagram-helper/releases/](https://github.com/pishangujeniya/instagram-helper/releases/)
+- Download latest release version (Source Code zip) and extract to desktop.
+- Double click [InstagramHelperChrome.js](./InstagramHelperChrome.js) from the extracted folder. _(This js file is not to be run into browser or browser console, only need to double click and run with Windows Active Host)_
+- That will then generate a Chrome Shortcut on your Desktop with name `InstagramHelperChrome`
+- Open that Special Chrome Browser using that shortcut.
+- Open [Instagram.com](https://instagram.com)
+- Press `F12` (Developer Tools) or `Ctrl+Shift+I`
+- Open any chat and then see the link should be such as (https://www.instagram.com/direct/t/xxxx)
+- Note and copy the last long numerical digits from link to some notepad.
+- Those digits is your chat thread Id.
+- Now Copy the [InstagramHelper.js](./InstagramHelper.js) file contents and paste it in `Console` tab
+- Copy Paste the following code in Console and Hit Enter
+- ```javascript
     var ig  = new InstagramHelper();
     ig.startUnsending("your_chat_thread_Id");
     ```
-16. After that you will see **getting messages...** displayed in the console window and **Deleting...** will be displayed whenever it starts deleting.
-17. At the end it will show **All messages deleted.**, So you have unsended every message that you sent.
-18. If you want to confirm if any of the messages are skipped or left to delete then you can run the following to get the number of messages that you send which are not yet deleted. 
-19. ```javascript
+- After that you will see **getting messages...** displayed in the console window and **Deleting...** will be displayed whenever it starts deleting.
+- At the end it will show **All messages deleted.**, So you have unsended every message that you sent.
+- If you want to confirm if any of the messages are skipped or left to delete then you can run the following to get the number of messages that you send which are not yet deleted. 
+- ```javascript
     var ig  = new InstagramHelper();
     ig.getAllMessageIds("your_chat_thread_Id");
     ```
-20. After it says **All Messages fetched, No More messages to fetch**, run the following code to get the number of messages which are yet to delete.
-21. ```javascript
+- After it says **All Messages fetched, No More messages to fetch**, run the following code to get the number of messages which are yet to delete.
+- ```javascript
     console.log(ig.p_itemsIdArray.length);
     ```
-22. Deleting messages is kept intentionally slow because Instagram has limit to delete number of messages in per second.
-23. > If we delete fastly then Instagram servers detects it as bot and then unsending is not allowed with the session temporarily, until you logout and relogin. So to avoid getting detected, we have kept a delay in the code to delete messages with specific interval of time.
-24. As and when it says **All Messages Deleted** it has deleted all the messages in the chat.
-25. > It is very tedious and time consuming process, but efficient and better than doing it manually. One can simply open a new chrome browser window and follow the simple steps and minimise it.
+- Deleting messages is kept intentionally slow because Instagram has limit to delete number of messages in per second.
+> If we delete fastly then Instagram servers detects it as bot and then unsending is not allowed with the session temporarily, until you logout and relogin. So to avoid getting detected, we have kept a delay in the code to delete messages with specific interval of time.
+- As and when it says **All Messages Deleted** it has deleted all the messages in the chat.
+> It is very tedious and time consuming process, but efficient and better than doing it manually. One can simply open a new chrome browser window and follow the simple steps and minimise it.
 
 ### FAQ
 
