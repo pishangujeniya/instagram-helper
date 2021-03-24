@@ -13,7 +13,7 @@ This JavaScript has helper methods to perform various tasks automation.
 ### How to delete/unsend all messages? ⁉
 1. Install [Chrome Browser](https://www.google.com/intl/en_in/chrome/)
 2. Open Notepad
-3. Copy all the code from [InstagramHelperChrome.js](./InstagramHelperChrome.js) file and paste in the notepad.
+3. Copy everything from inside the [InstagramHelperChrome.js](./InstagramHelperChrome.js) file and paste in the notepad. (Note: Not to paste in browser)
 4. Save the notepad file with `InstagramHelperChrome.js` name on Desktop (".js" at the end of file extension is needed)
 5. Double Click the file `InstagramHelperChrome.js` _(This js file is not to be run into browser or browser console)_
 6. This file will then generate a Chrome Shortcut on your Desktop with name `InstagramHelperChrome`
