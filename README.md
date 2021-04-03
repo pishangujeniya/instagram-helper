@@ -12,7 +12,7 @@ This JavaScript has helper methods to perform various tasks automation.
 1. Windows 7/8/10 (Are you MacOS or Linux user? [Help](https://github.com/pishangujeniya/instagram-helper/issues/22#issuecomment-774589015))
 2. Chrome Browser
 
-### How to delete/unsend all messages? ⁉
+### ⁉ How to delete/unsend all messages?
 - Install [Chrome Browser](https://www.google.com/intl/en_in/chrome/)
 - Open [https://github.com/pishangujeniya/instagram-helper/releases/](https://github.com/pishangujeniya/instagram-helper/releases/)
 - Download latest release version (Source Code zip) and extract to desktop.
@@ -46,7 +46,7 @@ This JavaScript has helper methods to perform various tasks automation.
 - As and when it says **All Messages Deleted** it has deleted all the messages in the chat.
 > It is very tedious and time consuming process, but efficient and better than doing it manually. One can simply open a new chrome browser window and follow the simple steps and minimise it.
 
-### How to get exported all messages? ⁉
+### ⁉ How to get exported all messages?
 
 - Install [Chrome Browser](https://www.google.com/intl/en_in/chrome/)
 - Open [https://github.com/pishangujeniya/instagram-helper/releases/](https://github.com/pishangujeniya/instagram-helper/releases/)
@@ -71,28 +71,29 @@ This JavaScript has helper methods to perform various tasks automation.
     ```
 
 - Open the link [InstagramHelperDataViewer](./InstagramHelperDataViewer.html) to view the data.
-### FAQ
 
-#### Getting errors displayed in console while running the code 😖
+### ⁉ FAQ
+
+#### 😖 Getting errors displayed in console while running the code
 - There might be some errors related to Instagram site, not every error displayed on console are from our script.
 - If error persists and repeats everytime, then close browser logout and relogin and then try running the code.
 
-#### Getting too often "Try again tomorrow" Error or 429 Response Code? 😵
+#### 😵 Getting too often "Try again tomorrow" Error or 429 Response Code?
 - Try to close the browser re-open Instagram and logout then login.
 - Instead of running this `ig.startUnsending("your_chat_thread_Id");` run with more higher number of delay by default it is 3500 milliseconds, try other values like 4500, 5500, 6500 `ig.startUnsending("your_chat_thread_Id",5500);`
 
-#### How to stop unsending process? 🛑
+#### 🛑 How to stop unsending process?
 - Refresh the browser or Close the browser or Restart the computer.
 
 
-### Upcoming features !!! 🆕
+### 🆕 Upcoming features !!!
 
 1. Get list of media sent, and unsend selected medias only. (such as video, photos).
 
-### Warning ⚠
+### ⚠ Warning
 > The script or the creator is in any ways not reponsibile for any of your actions. Do at your own risk.
 
-## Script created & Maintained by 💪
+## 💪 Script created & Maintained by
 
 [Pishang Ujeniya](https://github.com/pishangujeniya)
 
@@ -104,11 +105,11 @@ This JavaScript has helper methods to perform various tasks automation.
 - Share with your friends and colleagues.
 - Follow and Endorse me on [linkedin](https://www.linkedin.com/in/pishangujeniya).
 
-## Donations 💰
+## 💰 Donations
 *Star it!* ⭐ If it worked for you.
 - [PayPal](https://paypal.me/Pishang)
 
-### Donors 😍
+### 😍 Donors
 1. Laila Gates
 2. Nikita Rvachev
 
