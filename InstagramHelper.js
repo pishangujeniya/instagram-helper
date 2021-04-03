@@ -7,6 +7,8 @@ class InstagramHelper {
      * default constructor
      */
     constructor() {
+        this.allMessagesItemsArray = [];
+        this.usersChatParticipants = [];
         this.p_userId = this.getCookie("ds_user_id");
 
         this.p_itemsIdArray = [];
@@ -128,7 +130,7 @@ class InstagramHelper {
     /**
      * Fetch the messages and its itemIds
      */
-    async getAllMessageIds(threadId) {
+    async getAllMessagesData(threadId) {
 
         if (threadId == null || threadId == undefined) {
             console.error("threadId must be passed");
@@ -140,7 +142,6 @@ class InstagramHelper {
         // if its first message ever sent then stop else continue
         while (this.p_prevCursor != "MINCURSOR" && this.stopGettingMessages == false) {
 
-            // var getMessageAPIUrl = "https://www.instagram.com/direct_v2/web/threads/" + threadId + "/";
             var getMessageAPIUrl = "https://i.instagram.com/api/v1/direct_v2/threads/" + threadId + "/";
             if (this.p_oldestCursor != undefined && this.p_oldestCursor != null && this.p_oldestCursor.length > 0) {
                 getMessageAPIUrl = getMessageAPIUrl + "?cursor=" + this.p_oldestCursor + "";
@@ -182,12 +183,64 @@ class InstagramHelper {
                 .then((data) => {
                     // console.log(data);
                     console.log("getting messages...");
+
+                    //#region Own Inviter Adding to Participants
+                    let inviterChatParticipant = {
+                        "pk": data.thread.inviter.pk,
+                        "profile_pic_url": data.thread.inviter.profile_pic_url,
+                        "full_name": data.thread.inviter.full_name,
+                        "username": data.thread.inviter.username
+                    }
+                    let isChatParticipantAlreadyExists = false;
+                    for (let index = 0; index < this.usersChatParticipants.length; index++) {
+                        const singleUserChatParticipant = this.usersChatParticipants[index];
+                        if (singleUserChatParticipant.pk == inviterChatParticipant.pk) {
+                            isChatParticipantAlreadyExists = true;
+                            break;
+                        }
+                    }
+                    if (!isChatParticipantAlreadyExists) {
+                        this.usersChatParticipants.push(inviterChatParticipant);
+                    }
+                    //#endregion
+
+                    //#region Thread Participants adding
+                    data.thread.users.forEach(element => {
+                        let chatParticipant = {
+                            "pk": element.pk,
+                            "profile_pic_url": element.profile_pic_url,
+                            "full_name": element.full_name,
+                            "username": element.username
+                        };
+                        let isChatParticipantAlreadyExists = false;
+                        for (let index = 0; index < this.usersChatParticipants.length; index++) {
+                            const singleUserChatParticipant = this.usersChatParticipants[index];
+                            if (singleUserChatParticipant.pk == element.pk) {
+                                isChatParticipantAlreadyExists = true;
+                                break;
+                            }
+                        }
+                        if (!isChatParticipantAlreadyExists) {
+                            this.usersChatParticipants.push(chatParticipant);
+                        }
+                    });
+                    //#endregion
+
+
+                    //#region Adding Messages
                     data.thread.items.forEach(element => {
+                        this.allMessagesItemsArray.push(element);
+                    });
+                    //#endregion
+                    data.thread.items.forEach(element => {
+
                         if (element.user_id.toString() == this.p_userId.toString()) {
                             if (!this.p_itemsIdArray.includes(element.item_id.toString())) {
                                 this.p_itemsIdArray.push(element.item_id.toString());
                             }
                         }
+
+                        this.allMessagesItemsArray.push(element);
                     });
 
                     this.p_oldestCursor = data.thread.oldest_cursor;
@@ -389,6 +442,61 @@ class InstagramHelper {
             element.click();
         }
 
+    }
+
+    downloadMessagesDetails() {
+        this.downloadJsonFile(
+            {
+                "myUserId": this.p_userId,
+                "allMessagesItemsArray": this.allMessagesItemsArray,
+                "usersChatParticipants": this.usersChatParticipants,
+            },
+            "InstaGramHelperChatMessagesData"
+        );
+    }
+
+    /**
+     * Downloads JSON file from Object in Browser
+     * @param {*} jsonDataObject Json Object
+     * @param {string} fileNameExcludingExtension 
+     */
+    downloadJsonFile(jsonDataObject, fileNameExcludingExtension = 'data') {
+        const blob = new Blob(['\ufeff' + JSON.stringify(jsonDataObject)], {
+            type: 'text/json;charset=utf-8;'
+        });
+        const dwldLink = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        const isSafariBrowser = navigator.userAgent.indexOf('Safari') !== -1 &&
+            navigator.userAgent.indexOf('Chrome') === -1;
+        if (isSafariBrowser) {
+            // for safari
+            dwldLink.setAttribute('target', '_blank');
+        }
+        dwldLink.setAttribute('href', url);
+        dwldLink.setAttribute('download', fileNameExcludingExtension + '.json');
+        dwldLink.style.visibility = 'hidden';
+        document.body.appendChild(dwldLink);
+        dwldLink.click();
+        document.body.removeChild(dwldLink);
+    }
+
+    /**
+     * Downloads any type of file containing text in browser
+     * @param {*} text String Text of File
+     * @param {string} fileNameExcludingExtension File name without Extension
+     * @param {string} extension Extension of file with downloadTextFile
+     */
+    downloadTextFile(text, fileNameExcludingExtension = 'data', extension = '.txt') {
+        var element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        element.setAttribute('download', fileNameExcludingExtension + extension);
+
+        element.style.display = 'none';
+        document.body.appendChild(element);
+
+        element.click();
+
+        document.body.removeChild(element);
     }
 
 }

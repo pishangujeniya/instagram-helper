@@ -1,0 +1,320 @@
+<html>
+
+<head>
+    <title>InstagramHelper Data Viewer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            margin: 0 auto;
+            max-width: 800px;
+            padding: 0 20px;
+        }
+
+        .container {
+            border: 2px solid #dedede;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        .darker {
+            border-color: #ccc;
+            background-color: #ddd;
+        }
+
+        .container::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+
+        .container img {
+            float: left;
+            max-width: 60px;
+            width: 100%;
+            margin-right: 20px;
+            border-radius: 50%;
+        }
+
+        .container img.right {
+            float: right;
+            margin-left: 20px;
+            margin-right: 0;
+        }
+
+        .time-right {
+            float: right;
+            color: #aaa;
+        }
+
+        .time-left {
+            float: left;
+            color: #999;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <h2>Chat Messages</h2>
+    <form id="jsonFile" name="jsonFile" enctype="multipart/form-data" method="post">
+        <fieldset>
+            <h2>InstagramHelper Data Json File</h2>
+            <input type='file' id='fileinput'>
+            <input type='button' id='btnLoad' value='Load' onclick='loadFile();'>
+        </fieldset>
+    </form>
+
+    <div id="chatMessages">
+
+    </div>
+
+    <script type="text/javascript">
+
+        let chatMessagesDiv = document.getElementById("chatMessages");
+
+        var allPossibleItemTypes = [
+            "action_log",
+            "text",
+            "link",
+            "media_share",
+            "clip",
+            "media",
+            "video_call_event",
+            "felix_share",
+            "placeholder"
+        ];
+
+        var myUserId = 123456789;
+        var jsonFileData = {};
+        var allMessagesItemsArray = [];
+        var usersChatParticipants = [];
+
+        function loadFile() {
+            var input, file, fr;
+
+            if (typeof window.FileReader !== 'function') {
+                alert("The file API isn't supported on this browser yet.");
+                return;
+            }
+
+            input = document.getElementById('fileinput');
+            if (!input) {
+                alert("Um, couldn't find the fileinput element.");
+            }
+            else if (!input.files) {
+                alert("This browser doesn't seem to support the `files` property of file inputs.");
+            }
+            else if (!input.files[0]) {
+                alert("Please select a file before clicking 'Load'");
+            }
+            else {
+                file = input.files[0];
+                fr = new FileReader();
+                fr.onload = receivedText;
+                fr.readAsText(file);
+            }
+
+            function receivedText(e) {
+                let lines = e.target.result;
+                jsonFileData = JSON.parse(lines);
+                afterJsonLoad();
+            }
+        }
+
+        function getParticipantImageLink(userId) {
+            for (let index = 0; index < usersChatParticipants.length; index++) {
+                const singleUserChatParticipant = usersChatParticipants[index];
+                if (singleUserChatParticipant.pk == userId) {
+                    return singleUserChatParticipant["profile_pic_url"];
+                }
+            }
+            return "https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png";
+        }
+
+        function myTextChatBoxGenerator(avatarImgSrc, text, timestamp) {
+            let chatTime = new Date(timestamp / 1000).toLocaleString();
+            let chatBox = '<div class="container darker">' +
+                '<img src="' + avatarImgSrc + '" alt="Avatar" class="right" style="width:100%;">' +
+                '<p>' + text + '</p>' +
+                '<span class="time-left">' + chatTime + '</span>' +
+                '</div>';
+            return chatBox;
+        }
+
+        function otherTextChatBoxGenerator(avatarImgSrc, text, timestamp) {
+            let chatTime = new Date(timestamp / 1000).toLocaleString();
+            let chatBox = '<div class="container">' +
+                '<img src="' + avatarImgSrc + '" alt="Avatar" style="width:100%;">' +
+                '<p>' + text + '</p>' +
+                '<span class="time-right">' + chatTime + '</span>' +
+                '</div>';
+            return chatBox;
+        }
+
+        function myLinkChatBoxGenerator(avatarImgSrc, link_url, link_text, timestamp) {
+            let chatTime = new Date(timestamp / 1000).toLocaleString();
+            let chatBox = '<div class="container darker">' +
+                '<img src="' + avatarImgSrc + '" alt="Avatar" class="right" style="width:100%;">' +
+                '<p><a href=' + link_url + ' target="_blank">' + link_text + '</a></p>' +
+                '<span class="time-left">' + chatTime + '</span>' +
+                '</div>';
+            return chatBox;
+        }
+
+        function otherLinkChatBoxGenerator(avatarImgSrc, link_url, link_text, timestamp) {
+            let chatTime = new Date(timestamp / 1000).toLocaleString();
+            let chatBox = '<div class="container">' +
+                '<img src="' + avatarImgSrc + '" alt="Avatar" style="width:100%;">' +
+                '<p><a href=' + link_url + ' target="_blank">' + link_text + '</a></p>' +
+                '<span class="time-right">' + chatTime + '</span>' +
+                '</div>';
+            return chatBox;
+        }
+
+        function myMediaShareChatBoxGenerator(avatarImgSrc, mediaCode, mediaUserName, timestamp) {
+            let chatTime = new Date(timestamp / 1000).toLocaleString();
+            let link_url = "https://instagram.com/p/" + mediaCode;
+            let chatBox = '<div class="container darker">' +
+                '<img src="' + avatarImgSrc + '" alt="Avatar" class="right" style="width:100%;">' +
+                '<p> Post By <a href=' + link_url + ' target="_blank" >' + mediaUserName + '</a></p>' +
+                '<span class="time-left">' + chatTime + '</span>' +
+                '</div>';
+            return chatBox;
+        }
+
+        function otherMediaShareChatBoxGenerator(avatarImgSrc, mediaCode, mediaUserName, timestamp) {
+            let chatTime = new Date(timestamp / 1000).toLocaleString();
+            let link_url = "https://instagram.com/p/" + mediaCode;
+            let chatBox = '<div class="container">' +
+                '<img src="' + avatarImgSrc + '" alt="Avatar" style="width:100%;">' +
+                '<p> Post By <a href=' + link_url + ' target="_blank" >' + mediaUserName + '</a></p>' +
+                '<span class="time-right">' + chatTime + '</span>' +
+                '</div>';
+            return chatBox;
+        }
+
+        function myClipChatBoxGenerator(avatarImgSrc, clipCode, clipUsername, timestamp) {
+            let chatTime = new Date(timestamp / 1000).toLocaleString();
+            let link_url = "https://instagram.com/p/" + clipCode;
+            let chatBox = '<div class="container darker">' +
+                '<img src="' + avatarImgSrc + '" alt="Avatar" class="right" style="width:100%;">' +
+                '<p> Clip By <a href=' + link_url + ' target="_blank" >' + clipUsername + '</a></p>' +
+                '<span class="time-left">' + chatTime + '</span>' +
+                '</div>';
+            return chatBox;
+        }
+
+        function otherClipChatBoxGenerator(avatarImgSrc, clipCode, clipUsername, timestamp) {
+            let chatTime = new Date(timestamp / 1000).toLocaleString();
+            let link_url = "https://instagram.com/p/" + clipCode;
+            let chatBox = '<div class="container">' +
+                '<img src="' + avatarImgSrc + '" alt="Avatar" style="width:100%;">' +
+                '<p> Clip By <a href=' + link_url + ' target="_blank" >' + clipUsername + '</a></p>' +
+                '<span class="time-right">' + chatTime + '</span>' +
+                '</div>';
+            return chatBox;
+        }
+
+        function myMediaChatBoxGenerator(avatarImgSrc, timestamp) {
+            let chatTime = new Date(timestamp / 1000).toLocaleString();
+            let chatBox = '<div class="container darker">' +
+                '<img src="' + avatarImgSrc + '" alt="Avatar" class="right" style="width:100%;">' +
+                '<p>---PRIVATE MEDIA SHARED---</p>' +
+                '<span class="time-left">' + chatTime + '</span>' +
+                '</div>';
+            return chatBox;
+        }
+
+        function otherMediaChatBoxGenerator(avatarImgSrc, timestamp) {
+            let chatTime = new Date(timestamp / 1000).toLocaleString();
+            let chatBox = '<div class="container">' +
+                '<img src="' + avatarImgSrc + '" alt="Avatar" style="width:100%;">' +
+                '<p>---PRIVATE MEDIA SHARED---</p>' +
+                '<span class="time-right">' + chatTime + '</span>' +
+                '</div>';
+            return chatBox;
+        }
+
+        function afterJsonLoad() {
+            allMessagesItemsArray = jsonFileData["allMessagesItemsArray"];
+            myUserId = jsonFileData["myUserId"];
+            usersChatParticipants = jsonFileData["usersChatParticipants"];
+            loadMessages();
+        }
+
+        function loadMessages() {
+
+            for (let index = allMessagesItemsArray.length - 1; index >= 0; index--) {
+                const element = allMessagesItemsArray[index];
+                const div = document.createElement('div');
+
+                let appendInnerHtml = "";
+                if (myUserId == element["user_id"]) {
+                    let myProfilePic = getParticipantImageLink(myUserId);
+                    // Me
+                    if (element["item_type"] == "text") {
+                        const text = element["text"];
+                        const timestamp = element["timestamp"];
+                        appendInnerHtml = myTextChatBoxGenerator(myProfilePic, text, timestamp);
+                    } else if (element["item_type"] == "link") {
+                        const linkUrl = element["link"]["link_context"]["link_url"];
+                        const linkTitle = element["link"]["link_context"]["link_title"];
+                        const timestamp = element["timestamp"];
+                        appendInnerHtml = myLinkChatBoxGenerator(myProfilePic, linkUrl, linkTitle, timestamp);
+                    } else if (element["item_type"] == "media_share") {
+                        const mediaCode = element["media_share"]["code"];
+                        const mediaUserName = element["media_share"]["user"]["username"];
+                        const timestamp = element["timestamp"];
+                        appendInnerHtml = myMediaShareChatBoxGenerator(myProfilePic, mediaCode, mediaUserName, timestamp);
+                    } else if (element["item_type"] == "clip") {
+                        const mediaCode = element["clip"]["clip"]["code"];
+                        const mediaUserName = element["clip"]["clip"]["user"]["username"];
+                        const timestamp = element["timestamp"];
+                        appendInnerHtml = myClipChatBoxGenerator(myProfilePic, mediaCode, mediaUserName, timestamp);
+                    } else if (element["item_type"] == "media") {
+                        const timestamp = element["timestamp"];
+                        appendInnerHtml = myMediaChatBoxGenerator(myProfilePic, timestamp);
+                    }
+                } else {
+                    // Other
+                    if (element["item_type"] == "text") {
+                        const text = element["text"];
+                        const timestamp = element["timestamp"];
+                        appendInnerHtml = otherTextChatBoxGenerator(getParticipantImageLink(element["user_id"]), text, timestamp);
+                    } else if (element["item_type"] == "link") {
+                        const linkUrl = element["link"]["link_context"]["link_url"];
+                        const linkTitle = element["link"]["link_context"]["link_title"];
+                        const timestamp = element["timestamp"];
+                        appendInnerHtml = otherLinkChatBoxGenerator(getParticipantImageLink(element["user_id"]), linkUrl, linkTitle, timestamp);
+                    } else if (element["item_type"] == "media_share") {
+                        const mediaCode = element["media_share"]["code"];
+                        const mediaUserName = element["media_share"]["user"]["username"];
+                        const timestamp = element["timestamp"];
+                        appendInnerHtml = otherMediaShareChatBoxGenerator(getParticipantImageLink(element["user_id"]), mediaCode, mediaUserName, timestamp);
+                    } else if (element["item_type"] == "clip") {
+                        const mediaCode = element["clip"]["clip"]["code"];
+                        const mediaUserName = element["clip"]["clip"]["user"]["username"];
+                        const timestamp = element["timestamp"];
+                        appendInnerHtml = otherClipChatBoxGenerator(getParticipantImageLink(element["user_id"]), mediaCode, mediaUserName, timestamp);
+                    } else if (element["item_type"] == "media") {
+                        const timestamp = element["timestamp"];
+                        appendInnerHtml = otherMediaChatBoxGenerator(getParticipantImageLink(element["user_id"]), timestamp);
+                    }
+                }
+
+                div.innerHTML = appendInnerHtml;
+
+                chatMessagesDiv.appendChild(div);
+
+            }
+
+        }
+
+    </script>
+
+</body>
+
+</html>
