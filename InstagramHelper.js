@@ -229,7 +229,19 @@ class InstagramHelper {
 
                     //#region Adding Messages
                     data.thread.items.forEach(element => {
-                        this.allMessagesItemsArray.push(element);
+
+                        var isExists = false;
+
+                        for (let index = 0; index < this.allMessagesItemsArray.length; index++) {
+                            const existingElement = this.allMessagesItemsArray[index];
+                            if (existingElement.item_id.toString() == element.item_id.toString()) {
+                                isExists = true;
+                                break;
+                            }
+                        }
+                        if (!isExists) {
+                            this.allMessagesItemsArray.push(element);
+                        }
                     });
                     //#endregion
                     data.thread.items.forEach(element => {
