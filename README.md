@@ -93,6 +93,8 @@ This JavaScript has helper methods to perform various tasks automation.
 ### ⚠ Warning
 > The script or the creator is in any ways not reponsibile for any of your actions. Do at your own risk.
 
+> For education purpose only.
+
 > The script in any way is not doing anything different other than just computer programmatically automation to the task which a user would do manually.
 
 > We do not collect any data or information.
