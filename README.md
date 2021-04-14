@@ -93,6 +93,20 @@ This JavaScript has helper methods to perform various tasks automation.
 ### ⚠ Warning
 > The script or the creator is in any ways not reponsibile for any of your actions. Do at your own risk.
 
+> The script in any way is not doing anything different other than just computer programmatically automation to the task which a user would do manually.
+
+> We do not collect any data or information.
+
+> The network request is send to server whenever a user does some task on using Instagram Normally, that requests are automatically programmatically sent using this script.
+
+> We do not have any connection to the user who is using this script.
+
+> The script is totally the similar execution of code to the task which Instagram Website does.
+
+> The script does the task on the site of Instagram.com and so the requests are also sent on the Instagram server for the task.
+
+> The code of script is totally opensource and is very simple and easy to understand which can confirm the above statements.
+
 ## 💪 Script created & Maintained by
 
 [Pishang Ujeniya](https://github.com/pishangujeniya)
