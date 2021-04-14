@@ -82,6 +82,11 @@ This JavaScript has helper methods to perform various tasks automation.
 - Try to close the browser re-open Instagram and logout then login.
 - Instead of running this `ig.startUnsending("your_chat_thread_Id");` run with more higher number of delay by default it is 3500 milliseconds, try other values like 4500, 5500, 6500 `ig.startUnsending("your_chat_thread_Id",5500);`
 
+#### 😒 Any more questions?
+- Check [Issues Page](https://github.com/pishangujeniya/instagram-helper/issues?q=)
+- If your question is not existing in issues do create a new Issue [here](https://github.com/pishangujeniya/instagram-helper/issues/new/choose) instead of messaging on social media or emailing me.
+
+
 #### 🛑 How to stop unsending process?
 - Refresh the browser or Close the browser or Restart the computer.
 
