@@ -91,13 +91,9 @@ This JavaScript has helper methods to perform various tasks automation.
 #### 🛑 How to stop unsending process?
 - Refresh the browser or Close the browser or Restart the computer.
 
-#### How to confirm how many messages are there in chat?
+#### 😕 How to confirm how many messages are there in chat?
 - Follow the steps mentioned in 'How to get exported all messages?'
 
-
-### 🆕 Upcoming features !!!
-
-1. Get list of media sent, and unsend selected medias only. (such as video, photos).
 
 ### ⚠ Warning
 > The script or the creator is in any ways not reponsibile for any of your actions. Do at your own risk.
