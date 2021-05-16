@@ -12,7 +12,7 @@ This JavaScript has helper methods to perform various tasks automation.
 1. Windows 7/8/10 (Are you MacOS or Linux user? [Help](https://github.com/pishangujeniya/instagram-helper/issues/22#issuecomment-774589015))
 2. Chrome Browser
 
-### ⁉ How to delete/unsend all messages?
+### Initial Steps
 - Install [Chrome Browser](https://www.google.com/intl/en_in/chrome/)
 - Open [https://github.com/pishangujeniya/instagram-helper/releases/](https://github.com/pishangujeniya/instagram-helper/releases/)
 - Download latest release version (Source Code zip) and extract to desktop.
@@ -21,6 +21,10 @@ This JavaScript has helper methods to perform various tasks automation.
 - Open that Special Chrome Browser using that shortcut.
 - Open [Instagram.com](https://instagram.com)
 - Press `F12` (Developer Tools) or `Ctrl+Shift+I`
+
+
+### ⁉ How to delete/unsend all messages? 📃📷🎥
+- Follow the initial steps
 - Open any chat and then see the link should be such as (https://www.instagram.com/direct/t/xxxx)
 - Note and copy the last long numerical digits from link to some notepad.
 - Those digits is your chat thread Id.
@@ -32,29 +36,13 @@ This JavaScript has helper methods to perform various tasks automation.
     ```
 - After that you will see **getting messages...** displayed in the console window and **Deleting...** will be displayed whenever it starts deleting.
 - At the end it will show **All messages deleted.**, So you have unsended every message that you sent.
-- If you want to confirm if any of the messages are skipped or left to delete then you can run the following to get the number of messages that you send which are not yet deleted. 
-- ```javascript
-    var ig  = new InstagramHelper();
-    ig.getAllMessageIds("your_chat_thread_Id");
-    ```
-- After it says **All Messages fetched, No More messages to fetch**, run the following code to get the number of messages which are yet to delete.
-- ```javascript
-    console.log(ig.p_itemsIdArray.length);
-    ```
+
 - Deleting messages is kept intentionally slow because Instagram has limit to delete number of messages in per second.
 > If we delete fastly then Instagram servers detects it as bot and then unsending is not allowed with the session temporarily, until you logout and relogin. So to avoid getting detected, we have kept a delay in the code to delete messages with specific interval of time.
-- As and when it says **All Messages Deleted** it has deleted all the messages in the chat.
 > It is very tedious and time consuming process, but efficient and better than doing it manually. One can simply open a new chrome browser window and follow the simple steps and minimise it.
 
-### ⁉ How to delete/unsend all media content?
-- Install [Chrome Browser](https://www.google.com/intl/en_in/chrome/)
-- Open [https://github.com/pishangujeniya/instagram-helper/releases/](https://github.com/pishangujeniya/instagram-helper/releases/)
-- Download latest release version (Source Code zip) and extract to desktop.
-- Double click [InstagramHelperChrome.js](./InstagramHelperChrome.js) from the extracted folder. _(This js file is not to be run into browser or browser console, only need to double click and run with Windows Active Host)_
-- That will then generate a Chrome Shortcut on your Desktop with name `InstagramHelperChrome`
-- Open that Special Chrome Browser using that shortcut.
-- Open [Instagram.com](https://instagram.com)
-- Press `F12` (Developer Tools) or `Ctrl+Shift+I`
+### ⁉ How to delete/unsend all media content (other than text)?📷🎥
+- Follow the initial steps
 - Open any chat and then see the link should be such as (https://www.instagram.com/direct/t/xxxx)
 - Note and copy the last long numerical digits from link to some notepad.
 - Those digits is your chat thread Id.
@@ -67,16 +55,8 @@ This JavaScript has helper methods to perform various tasks automation.
 - After that you will see **getting media...** displayed in the console window and **Deleting...** will be displayed whenever it starts deleting.
 - At the end it will show **All media deleted.**, So you have unsended every message that you sent.
 
-### ⁉ How to get exported all messages?
-
-- Install [Chrome Browser](https://www.google.com/intl/en_in/chrome/)
-- Open [https://github.com/pishangujeniya/instagram-helper/releases/](https://github.com/pishangujeniya/instagram-helper/releases/)
-- Download latest release version (Source Code zip) and extract to desktop.
-- Double click [InstagramHelperChrome.js](./InstagramHelperChrome.js) from the extracted folder. _(This js file is not to be run into browser or browser console, only need to double click and run with Windows Active Host)_
-- That will then generate a Chrome Shortcut on your Desktop with name `InstagramHelperChrome`
-- Open that Special Chrome Browser using that shortcut.
-- Open [Instagram.com](https://instagram.com)
-- Press `F12` (Developer Tools) or `Ctrl+Shift+I`
+### ⁉ How to get exported all messages?💾
+- Follow the initial steps
 - Open any chat and then see the link should be such as (https://www.instagram.com/direct/t/xxxx)
 - Note and copy the last long numerical digits from link to some notepad.
 - Those digits is your chat thread Id.
@@ -110,6 +90,9 @@ This JavaScript has helper methods to perform various tasks automation.
 
 #### 🛑 How to stop unsending process?
 - Refresh the browser or Close the browser or Restart the computer.
+
+#### How to confirm how many messages are there in chat?
+- Follow the steps mentioned in 'How to get exported all messages?'
 
 
 ### 🆕 Upcoming features !!!
