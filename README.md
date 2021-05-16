@@ -46,6 +46,27 @@ This JavaScript has helper methods to perform various tasks automation.
 - As and when it says **All Messages Deleted** it has deleted all the messages in the chat.
 > It is very tedious and time consuming process, but efficient and better than doing it manually. One can simply open a new chrome browser window and follow the simple steps and minimise it.
 
+### ⁉ How to delete/unsend all media content?
+- Install [Chrome Browser](https://www.google.com/intl/en_in/chrome/)
+- Open [https://github.com/pishangujeniya/instagram-helper/releases/](https://github.com/pishangujeniya/instagram-helper/releases/)
+- Download latest release version (Source Code zip) and extract to desktop.
+- Double click [InstagramHelperChrome.js](./InstagramHelperChrome.js) from the extracted folder. _(This js file is not to be run into browser or browser console, only need to double click and run with Windows Active Host)_
+- That will then generate a Chrome Shortcut on your Desktop with name `InstagramHelperChrome`
+- Open that Special Chrome Browser using that shortcut.
+- Open [Instagram.com](https://instagram.com)
+- Press `F12` (Developer Tools) or `Ctrl+Shift+I`
+- Open any chat and then see the link should be such as (https://www.instagram.com/direct/t/xxxx)
+- Note and copy the last long numerical digits from link to some notepad.
+- Those digits is your chat thread Id.
+- Now Copy the [InstagramHelper.js](./InstagramHelper.js) file contents and paste it in `Console` tab
+- Copy Paste the following code in Console and Hit Enter
+- ```javascript
+    var ig  = new InstagramHelper();
+    ig.startUnsendingMedia("your_chat_thread_Id");
+    ```
+- After that you will see **getting media...** displayed in the console window and **Deleting...** will be displayed whenever it starts deleting.
+- At the end it will show **All media deleted.**, So you have unsended every message that you sent.
+
 ### ⁉ How to get exported all messages?
 
 - Install [Chrome Browser](https://www.google.com/intl/en_in/chrome/)
