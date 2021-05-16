@@ -440,6 +440,136 @@ class InstagramHelper {
 
     }
 
+    async startUnsendingMedia(threadId = undefined, delay = 3500) {
+        if (threadId == null || threadId == undefined) {
+            var threadId = window.location.href.split('/')[5]; // Get the chat id automatically from the url, make sure a chat is currently active
+            console.warn("Starting deleting from thread Id : " + threadId);
+        }
+
+        console.warn("Inevitable");
+
+        let threadLink = "https://www.instagram.com/direct/t/" + threadId;
+
+        // if its first message ever sent then stop else continue
+        while (this.p_prevCursor != "MINCURSOR") {
+
+            var getMessageAPIUrl = "https://i.instagram.com/api/v1/direct_v2/threads/" + threadId + "/";
+            if (this.p_oldestCursor != undefined && this.p_oldestCursor != null && this.p_oldestCursor.length > 0) {
+                getMessageAPIUrl = getMessageAPIUrl + "?cursor=" + this.p_oldestCursor + "";
+            }
+
+            var getMessagesRequestInit = {
+                "credentials": "include",
+                "headers": {
+                    "accept": "*/*",
+                    "accept-language": "en-US,en;q=0.9",
+                    "cache-control": "no-cache",
+                    "pragma": "no-cache",
+                    "sec-fetch-dest": "empty",
+                    "sec-fetch-mode": "cors",
+                    "sec-fetch-site": "same-origin",
+                    "x-ig-app-id": localStorage.getItem("instagramWebFBAppId"),
+                    "x-ig-www-claim": sessionStorage.getItem("www-claim-v2"),
+                    "x-requested-with": "XMLHttpRequest"
+                },
+                "referrer": threadLink,
+                "referrerPolicy": "no-referrer-when-downgrade",
+                "body": null,
+                "method": "GET",
+                "mode": "cors"
+            };
+
+            await fetch(
+                getMessageAPIUrl,
+                getMessagesRequestInit
+            )
+                .then(async (response) => {
+                    if (response.status != 200) {
+                        console.error("Try again tomorrow");
+                    } else {
+                        return response.json();
+                    }
+                })
+                .then(async (data) => {
+                    // console.log(data);
+
+                    let itemIdsToDelete = [];
+
+                    console.log("getting media...");
+                    data.thread.items.forEach(element => {
+                       // console.log("element is text " + JSON.stringify(element));
+
+                        if (element.user_id.toString() == this.p_userId.toString()) {
+                            if(element.item_type  !== "text"){      
+                                if (!itemIdsToDelete.includes(element.item_id.toString())) {
+                                    itemIdsToDelete.push(element.item_id.toString());
+                                }
+                            }
+                        }
+                    });
+
+                    //#region  Deleting Messages
+
+                    for (let itemIdIndex = 0; itemIdIndex < itemIdsToDelete.length; itemIdIndex++) {
+                        const messageItemId = itemIdsToDelete[itemIdIndex];
+
+                        var p_unsendRequestInitObj = {
+                            "credentials": "include",
+                            "headers": {
+                                "accept": "*/*",
+                                "accept-language": "en-US,en;q=0.9",
+                                "cache-control": "no-cache",
+                                "content-type": "application/x-www-form-urlencoded",
+                                "pragma": "no-cache",
+                                "sec-fetch-dest": "empty",
+                                "sec-fetch-mode": "cors",
+                                "sec-fetch-site": "same-origin",
+                                "x-csrftoken": this.getCookie("csrftoken"),
+                                "x-ig-app-id": localStorage.getItem("instagramWebFBAppId"),
+                                "x-ig-www-claim": sessionStorage.getItem("www-claim-v2"),
+                                "x-requested-with": "XMLHttpRequest"
+                            },
+                            "referrer": threadLink,
+                            "referrerPolicy": "no-referrer-when-downgrade",
+                            "body": null,
+                            "method": "POST",
+                            "mode": "cors"
+                        };
+
+                        await fetch(
+                            "https://i.instagram.com/api/v1/direct_v2/threads/" + threadId + "/items/" + messageItemId + "/delete/",
+                            p_unsendRequestInitObj
+                        ).then((response) => {
+                            if (response.status != 200) {
+                                console.error("Some messages skipped");
+                            } else {
+                                console.info("Deleting...");
+                            }
+                        }).catch((error) => {
+                            console.error(error);
+                        });
+
+                        this.syncWait(delay);
+
+                    }
+
+                    //#endregion Deleting Messages
+
+                    this.p_oldestCursor = data.thread.oldest_cursor;
+                    this.p_prevCursor = data.thread.prev_cursor;
+
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+
+        }
+
+        console.warn("All media deleted.");
+        return true;
+
+    }
+
     /**
      * Deletes all the follow requests for private account
      * @param {string} deleteButtonCSSClassName | provide the css class name of Delete button by Inspect Element
