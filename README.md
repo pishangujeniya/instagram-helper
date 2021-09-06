@@ -16,9 +16,11 @@ This JavaScript has helper methods to perform various tasks automation.
 - Install [Chrome Browser](https://www.google.com/intl/en_in/chrome/)
 - Open [https://github.com/pishangujeniya/instagram-helper/releases/](https://github.com/pishangujeniya/instagram-helper/releases/)
 - Download latest release version (Source Code zip) and extract to desktop.
-- Double click [InstagramHelperChrome.js](./InstagramHelperChrome.js) from the extracted folder. _(This js file is not to be run into browser or browser console, only need to double click and run with Windows Active Host)_
+- Create an empty temporary folder somewhere.
+- Double click [InstagramHelperChrome.vbs](./InstagramHelperChrome.vbs) from the extracted folder.
+- Select that temporary created folder.
 - That will then generate a Chrome Shortcut on your Desktop with name `InstagramHelperChrome`
-- Open that Special Chrome Browser using that shortcut.
+- Open that Special Chrome Browser using that shortcut. (Ignore the flag that says _You are using an unsupported comman-line flag: --disable-web-security. Stability and security will suffer_) (This flag is shown because we will be mimicking the automation process of Sending Request to Instagram using Chrome).
 - Open [Instagram.com](https://instagram.com)
 - Press `F12` (Developer Tools) or `Ctrl+Shift+I`
 
