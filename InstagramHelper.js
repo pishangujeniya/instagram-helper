@@ -314,11 +314,20 @@ class InstagramHelper {
 
     }
 
-    async startUnsending(threadId = undefined, delay = 3500) {
+    /**
+     * Start Unsending messages
+     * @param {string} threadId Chat Thread Id
+     * @param {number} skipRecentXMessagesCount Number of messages to skip
+     * @param {number} delay Delay in milliseconds
+     * @returns 
+     */
+    async startUnsending(threadId = undefined, skipRecentXMessagesCount = 10, delay = 3500) {
         if (threadId == null || threadId == undefined) {
             var threadId = window.location.href.split('/')[5]; // Get the chat id automatically from the url, make sure a chat is currently active
             console.warn("Starting deleting from thread Id : " + threadId);
         }
+
+        var toSkippMessagesCount = 0;
 
         console.warn("Inevitable");
 
@@ -382,6 +391,11 @@ class InstagramHelper {
 
                     for (let itemIdIndex = 0; itemIdIndex < itemIdsToDelete.length; itemIdIndex++) {
                         const messageItemId = itemIdsToDelete[itemIdIndex];
+
+                        if (toSkippMessagesCount < skipRecentXMessagesCount) {
+                            toSkippMessagesCount = toSkippMessagesCount + 1;
+                            continue;
+                        }
 
                         var p_unsendRequestInitObj = {
                             "credentials": "include",
@@ -497,10 +511,10 @@ class InstagramHelper {
 
                     console.log("getting media...");
                     data.thread.items.forEach(element => {
-                       // console.log("element is text " + JSON.stringify(element));
+                        // console.log("element is text " + JSON.stringify(element));
 
                         if (element.user_id.toString() == this.p_userId.toString()) {
-                            if(element.item_type  !== "text"){      
+                            if (element.item_type !== "text") {
                                 if (!itemIdsToDelete.includes(element.item_id.toString())) {
                                     itemIdsToDelete.push(element.item_id.toString());
                                 }
