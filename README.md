@@ -31,10 +31,10 @@ This JavaScript has helper methods to perform various tasks automation.
 - Note and copy the last long numerical digits from link to some notepad.
 - Those digits is your chat thread Id.
 - Now Copy the [InstagramHelper.js](./InstagramHelper.js) file contents and paste it in `Console` tab
-- Copy Paste the following code in Console and Hit Enter
+- Copy Paste the following code in Console and Hit Enter (the number 10 after chat thread id is in the code after comma is for skipping recently sent 10 messages from unsending, you can change it to whatever number you want to skip those number of recently you send messages from unsending).
 - ```javascript
     var ig  = new InstagramHelper();
-    ig.startUnsending("your_chat_thread_Id");
+    ig.startUnsending("your_chat_thread_Id",10);
     ```
 - After that you will see **getting messages...** displayed in the console window and **Deleting...** will be displayed whenever it starts deleting.
 - At the end it will show **All messages deleted.**, So you have unsended every message that you sent.
