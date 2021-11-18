@@ -3,6 +3,12 @@
 # Instagram Helper Script
 > Instagram Scripts for various tasks automation
 
+![Website](https://img.shields.io/website?url=https%3A%2F%2Fpishangujeniya.github.io%2Finstagram-helper%2F)
+![GitHub issues](https://img.shields.io/github/issues/pishangujeniya/instagram-helper)
+![GitHub closed issues](https://img.shields.io/github/issues-closed/pishangujeniya/instagram-helper)
+![GitHub last commit](https://img.shields.io/github/last-commit/pishangujeniya/instagram-helper)
+![GitHub license](https://img.shields.io/github/license/pishangujeniya/instagram-helper)
+
 ![Instagram Helper](./images/90143326-1e862a80-dd9b-11ea-9d6f-9365617c8ea1.png)
 
 This JavaScript has helper methods to perform various tasks automation.
