@@ -140,6 +140,7 @@ This JavaScript has helper methods to perform various tasks automation.
 1. Laila Gates
 2. Nikita Rvachev
 3. Mark Utnehmer
+4. [Nadir Ajnay](nadirajnay@gmail.com)
 
 <a href="https://paypal.me/Pishang"><img src="./images/9218.jpg"></a>
 
