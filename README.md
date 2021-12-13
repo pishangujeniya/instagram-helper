@@ -25,7 +25,7 @@ This JavaScript has helper methods to perform various tasks automation.
 - Create an empty temporary folder somewhere.
 - Double click [InstagramHelperChrome.vbs](./InstagramHelperChrome.vbs) from the extracted folder.
 - Select that temporary created folder.
-- That will then generate a Chrome Shortcut on your Desktop with name `InstagramHelperChrome`
+- That will then generate a Chrome Shortcut on your selected path with name `InstagramHelperChrome`
 - Open that Special Chrome Browser using that shortcut. (Ignore the flag that says _You are using an unsupported comman-line flag: --disable-web-security. Stability and security will suffer_) (This flag is shown because we will be mimicking the automation process of Sending Request to Instagram using Chrome).
 - Open [Instagram.com](https://instagram.com)
 - Press `F12` (Developer Tools) or `Ctrl+Shift+I`

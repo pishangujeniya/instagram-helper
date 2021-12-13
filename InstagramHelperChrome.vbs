@@ -22,29 +22,32 @@
 ' Option Explicit
 
 Dim instagramHelperChromeDirectoryPath
+Dim shortcutDestinationDirectoryPath
 Dim specialArguments
-Dim desktopPath
 Dim objShortcut
 Dim objShell
+Set objShell = CreateObject("WScript.Shell")
 
 Const shortCutFileName = "InstagramHelperChrome"
 Const chromeInstalledPath = "C:\Program Files\Google\Chrome\Application\chrome.exe" '// Path to the Chrome.exe file installed in your Windows System.
 
+objShell.Popup("Select the temporary directory for Instagram Helper files.")
 instagramHelperChromeDirectoryPath = BrowseFolder("",False)
+
+objShell.Popup("Select the directory where you want to create the Instagram Helper shortcut.")
+shortcutDestinationDirectoryPath = BrowseFolder("",False)
 
 specialArguments = "--disable-web-security --disable-gpu --user-data-dir=""" & instagramHelperChromeDirectoryPath & """"
 
-Set objShell = CreateObject("WScript.Shell")
-
-desktopPath = objShell.SpecialFolders ("Desktop")
-Set objShortcut = objShell.CreateShortcut (desktopPath & "\" & shortCutFileName & ".lnk")
+' shortcutDestinationDirectoryPath = objShell.SpecialFolders ("Desktop")
+Set objShortcut = objShell.CreateShortcut (shortcutDestinationDirectoryPath & "\" & shortCutFileName & ".lnk")
 objShortcut.TargetPath = chromeInstalledPath
 objShortcut.WorkingDirectory = strWorkDir
 objShortcut.Description = shortCutFileName
 objShortcut.Arguments = specialArguments
 objShortcut.Save
 
-objShell.Popup("See Desktop, a new shortcut " & shortCutFileName & " is created")
+objShell.Popup("See " & shortcutDestinationDirectoryPath & ", a new shortcut " & shortCutFileName & " is created")
 
 WScript.Quit
 
