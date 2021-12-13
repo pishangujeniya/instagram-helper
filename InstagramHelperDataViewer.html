@@ -73,6 +73,8 @@
 
     <script type="text/javascript">
 
+        let avatarPlaceholder = "https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png";
+        let onErrorPlaceholderHtml = "this.src='" + avatarPlaceholder + "'";
         let chatMessagesDiv = document.getElementById("chatMessages");
 
         var allPossibleItemTypes = [
@@ -131,13 +133,13 @@
                     return singleUserChatParticipant["profile_pic_url"];
                 }
             }
-            return "https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png";
+            return avatarPlaceholder;
         }
 
         function myTextChatBoxGenerator(avatarImgSrc, text, timestamp) {
             let chatTime = new Date(timestamp / 1000).toLocaleString();
             let chatBox = '<div class="container darker">' +
-                '<img src="' + avatarImgSrc + '" alt="Avatar" class="right" style="width:100%;">' +
+                '<img src="' + avatarImgSrc + '" onerror="' + onErrorPlaceholderHtml + '" alt="Avatar" class="right" style="width:100%;">' +
                 '<p>' + text + '</p>' +
                 '<span class="time-left">' + chatTime + '</span>' +
                 '</div>';
@@ -147,7 +149,7 @@
         function otherTextChatBoxGenerator(avatarImgSrc, text, timestamp) {
             let chatTime = new Date(timestamp / 1000).toLocaleString();
             let chatBox = '<div class="container">' +
-                '<img src="' + avatarImgSrc + '" alt="Avatar" style="width:100%;">' +
+                '<img src="' + avatarImgSrc + '" onerror="' + onErrorPlaceholderHtml + '" alt="Avatar" style="width:100%;">' +
                 '<p>' + text + '</p>' +
                 '<span class="time-right">' + chatTime + '</span>' +
                 '</div>';
@@ -157,7 +159,7 @@
         function myLinkChatBoxGenerator(avatarImgSrc, link_url, link_text, timestamp) {
             let chatTime = new Date(timestamp / 1000).toLocaleString();
             let chatBox = '<div class="container darker">' +
-                '<img src="' + avatarImgSrc + '" alt="Avatar" class="right" style="width:100%;">' +
+                '<img src="' + avatarImgSrc + '" onerror="' + onErrorPlaceholderHtml + '" alt="Avatar" class="right" style="width:100%;">' +
                 '<p><a href=' + link_url + ' target="_blank">' + link_text + '</a></p>' +
                 '<span class="time-left">' + chatTime + '</span>' +
                 '</div>';
@@ -167,7 +169,7 @@
         function otherLinkChatBoxGenerator(avatarImgSrc, link_url, link_text, timestamp) {
             let chatTime = new Date(timestamp / 1000).toLocaleString();
             let chatBox = '<div class="container">' +
-                '<img src="' + avatarImgSrc + '" alt="Avatar" style="width:100%;">' +
+                '<img src="' + avatarImgSrc + '" onerror="' + onErrorPlaceholderHtml + '" alt="Avatar" style="width:100%;">' +
                 '<p><a href=' + link_url + ' target="_blank">' + link_text + '</a></p>' +
                 '<span class="time-right">' + chatTime + '</span>' +
                 '</div>';
@@ -178,7 +180,7 @@
             let chatTime = new Date(timestamp / 1000).toLocaleString();
             let link_url = "https://instagram.com/p/" + mediaCode;
             let chatBox = '<div class="container darker">' +
-                '<img src="' + avatarImgSrc + '" alt="Avatar" class="right" style="width:100%;">' +
+                '<img src="' + avatarImgSrc + '" onerror="' + onErrorPlaceholderHtml + '" alt="Avatar" class="right" style="width:100%;">' +
                 '<p> Post By <a href=' + link_url + ' target="_blank" >' + mediaUserName + '</a></p>' +
                 '<span class="time-left">' + chatTime + '</span>' +
                 '</div>';
@@ -189,7 +191,7 @@
             let chatTime = new Date(timestamp / 1000).toLocaleString();
             let link_url = "https://instagram.com/p/" + mediaCode;
             let chatBox = '<div class="container">' +
-                '<img src="' + avatarImgSrc + '" alt="Avatar" style="width:100%;">' +
+                '<img src="' + avatarImgSrc + '" onerror="' + onErrorPlaceholderHtml + '" alt="Avatar" style="width:100%;">' +
                 '<p> Post By <a href=' + link_url + ' target="_blank" >' + mediaUserName + '</a></p>' +
                 '<span class="time-right">' + chatTime + '</span>' +
                 '</div>';
@@ -200,7 +202,7 @@
             let chatTime = new Date(timestamp / 1000).toLocaleString();
             let link_url = "https://instagram.com/p/" + clipCode;
             let chatBox = '<div class="container darker">' +
-                '<img src="' + avatarImgSrc + '" alt="Avatar" class="right" style="width:100%;">' +
+                '<img src="' + avatarImgSrc + '" onerror="' + onErrorPlaceholderHtml + '" alt="Avatar" class="right" style="width:100%;">' +
                 '<p> Clip By <a href=' + link_url + ' target="_blank" >' + clipUsername + '</a></p>' +
                 '<span class="time-left">' + chatTime + '</span>' +
                 '</div>';
@@ -211,7 +213,7 @@
             let chatTime = new Date(timestamp / 1000).toLocaleString();
             let link_url = "https://instagram.com/p/" + clipCode;
             let chatBox = '<div class="container">' +
-                '<img src="' + avatarImgSrc + '" alt="Avatar" style="width:100%;">' +
+                '<img src="' + avatarImgSrc + '" onerror="' + onErrorPlaceholderHtml + '" alt="Avatar" style="width:100%;">' +
                 '<p> Clip By <a href=' + link_url + ' target="_blank" >' + clipUsername + '</a></p>' +
                 '<span class="time-right">' + chatTime + '</span>' +
                 '</div>';
@@ -221,7 +223,7 @@
         function myMediaChatBoxGenerator(avatarImgSrc, timestamp) {
             let chatTime = new Date(timestamp / 1000).toLocaleString();
             let chatBox = '<div class="container darker">' +
-                '<img src="' + avatarImgSrc + '" alt="Avatar" class="right" style="width:100%;">' +
+                '<img src="' + avatarImgSrc + '" onerror="' + onErrorPlaceholderHtml + '" alt="Avatar" class="right" style="width:100%;">' +
                 '<p>---PRIVATE MEDIA SHARED---</p>' +
                 '<span class="time-left">' + chatTime + '</span>' +
                 '</div>';
@@ -231,7 +233,7 @@
         function otherMediaChatBoxGenerator(avatarImgSrc, timestamp) {
             let chatTime = new Date(timestamp / 1000).toLocaleString();
             let chatBox = '<div class="container">' +
-                '<img src="' + avatarImgSrc + '" alt="Avatar" style="width:100%;">' +
+                '<img src="' + avatarImgSrc + '" onerror="' + onErrorPlaceholderHtml + '" alt="Avatar" style="width:100%;">' +
                 '<p>---PRIVATE MEDIA SHARED---</p>' +
                 '<span class="time-right">' + chatTime + '</span>' +
                 '</div>';
