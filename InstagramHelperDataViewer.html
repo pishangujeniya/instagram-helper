@@ -1,16 +1,19 @@
 <html>
+<!-- Bootstrap Bundle -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+    crossorigin="anonymous"></script>
+
+<!-- Jquery -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
 
 <head>
     <title>InstagramHelper Data Viewer</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        body {
-            margin: 0 auto;
-            max-width: 800px;
-            padding: 0 20px;
-        }
-
-        .container {
+        .chat-container {
             border: 2px solid #dedede;
             background-color: #f1f1f1;
             border-radius: 5px;
@@ -23,13 +26,13 @@
             background-color: #ddd;
         }
 
-        .container::after {
+        .chat-container::after {
             content: "";
             clear: both;
             display: table;
         }
 
-        .container img {
+        .chat-container img {
             float: left;
             max-width: 60px;
             width: 100%;
@@ -37,7 +40,7 @@
             border-radius: 50%;
         }
 
-        .container img.right {
+        .chat-container img.right {
             float: right;
             margin-left: 20px;
             margin-right: 0;
@@ -57,24 +60,48 @@
 
 <body>
 
+    <div class="container">
+        <div class="p-5 mb-4 bg-light rounded-3">
+            <div class="container-fluid py-5">
+                <h1 class="display-5 fw-bold">Chat Messages</h1>
+                <p class="col-md-8 fs-4">Load the json file that you downloaded below.</p>
+                <form id="jsonFile" name="jsonFile" enctype="multipart/form-data" method="post">
+                    <fieldset>
+                        <div>
+                            <label for="fileinput" class="form-label">InstagramHelper Data Json File</label>
+                            <input class="form-control form-control-lg" id="fileinput" type="file">
+                        </div>
+                        <br>
+                        <button class="btn btn-primary btn-lg" id='btnLoad' type="button"
+                            onclick='loadFile();'>Load</button>
+                        <button class="btn btn-danger btn-lg" id='btnClear' type="button"
+                            onclick='clearChatHistory();'>Clear</button>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
 
-    <h2>Chat Messages</h2>
-    <form id="jsonFile" name="jsonFile" enctype="multipart/form-data" method="post">
-        <fieldset>
-            <h2>InstagramHelper Data Json File</h2>
-            <input type='file' id='fileinput'>
-            <input type='button' id='btnLoad' value='Load' onclick='loadFile();'>
-        </fieldset>
-    </form>
+        <div id="chatMessages">
 
-    <div id="chatMessages">
+        </div>
 
+        <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+            <a href="https://pishangujeniya.github.io/instagram-helper/"
+                class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto text-decoration-none">&copy;
+                2021 Instagram Helper</a>
+            <ul class="nav col-md-4 justify-content-end">
+                <li class="nav-item"><a href="https://www.pexels.com/photo/man-smiling-behind-wall-220453/"
+                        class="nav-link px-2 text-muted">Avatar Placeholder - Photo by Pixabay from Pexels</a></li>
+                <li class="nav-item"><a href="https://www.pexels.com/photo/man-wearing-blue-crew-neck-t-shirt-2379005/"
+                        class="nav-link px-2 text-muted">Avatar Placeholder - Photo by Italo Melo from Pexels</a></li>
+            </ul>
+        </footer>
     </div>
 
     <script type="text/javascript">
 
-        let avatarPlaceholder = "https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png";
-        let onErrorPlaceholderHtml = "this.src='" + avatarPlaceholder + "'";
+        let otherAvatarPlaceholder = "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?crop=entropy&cs=srgb&dl=pexels-pixabay-220453.jpg&fit=crop&fm=jpg&h=200&w=200";
+        let myAvatarPlaceholder = "https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg?crop=entropy&cs=srgb&dl=pexels-italo-melo-2379005.jpg&fit=crop&fm=jpg&h=200&w=200"
         let chatMessagesDiv = document.getElementById("chatMessages");
 
         var allPossibleItemTypes = [
@@ -133,13 +160,23 @@
                     return singleUserChatParticipant["profile_pic_url"];
                 }
             }
-            return avatarPlaceholder;
+            return '';
+        }
+
+        function getErrorPlaceholderHtml(isMe = false) {
+            let onErrorPlaceholderHtml = "";
+            if (isMe) {
+                onErrorPlaceholderHtml = "this.src='" + myAvatarPlaceholder + "'";
+            } else {
+                onErrorPlaceholderHtml = "this.src='" + otherAvatarPlaceholder + "'";
+            }
+            return onErrorPlaceholderHtml;
         }
 
         function myTextChatBoxGenerator(avatarImgSrc, text, timestamp) {
             let chatTime = new Date(timestamp / 1000).toLocaleString();
-            let chatBox = '<div class="container darker">' +
-                '<img src="' + avatarImgSrc + '" onerror="' + onErrorPlaceholderHtml + '" alt="Avatar" class="right" style="width:100%;">' +
+            let chatBox = '<div class="chat-container darker">' +
+                '<img src="' + avatarImgSrc + '" onerror="' + getErrorPlaceholderHtml(true) + '" alt="Avatar" class="right" style="width:100%;">' +
                 '<p>' + text + '</p>' +
                 '<span class="time-left">' + chatTime + '</span>' +
                 '</div>';
@@ -148,8 +185,8 @@
 
         function otherTextChatBoxGenerator(avatarImgSrc, text, timestamp) {
             let chatTime = new Date(timestamp / 1000).toLocaleString();
-            let chatBox = '<div class="container">' +
-                '<img src="' + avatarImgSrc + '" onerror="' + onErrorPlaceholderHtml + '" alt="Avatar" style="width:100%;">' +
+            let chatBox = '<div class="chat-container">' +
+                '<img src="' + avatarImgSrc + '" onerror="' + getErrorPlaceholderHtml(false) + '" alt="Avatar" style="width:100%;">' +
                 '<p>' + text + '</p>' +
                 '<span class="time-right">' + chatTime + '</span>' +
                 '</div>';
@@ -158,8 +195,8 @@
 
         function myLinkChatBoxGenerator(avatarImgSrc, link_url, link_text, timestamp) {
             let chatTime = new Date(timestamp / 1000).toLocaleString();
-            let chatBox = '<div class="container darker">' +
-                '<img src="' + avatarImgSrc + '" onerror="' + onErrorPlaceholderHtml + '" alt="Avatar" class="right" style="width:100%;">' +
+            let chatBox = '<div class="chat-container darker">' +
+                '<img src="' + avatarImgSrc + '" onerror="' + getErrorPlaceholderHtml(true) + '" alt="Avatar" class="right" style="width:100%;">' +
                 '<p><a href=' + link_url + ' target="_blank">' + link_text + '</a></p>' +
                 '<span class="time-left">' + chatTime + '</span>' +
                 '</div>';
@@ -168,8 +205,8 @@
 
         function otherLinkChatBoxGenerator(avatarImgSrc, link_url, link_text, timestamp) {
             let chatTime = new Date(timestamp / 1000).toLocaleString();
-            let chatBox = '<div class="container">' +
-                '<img src="' + avatarImgSrc + '" onerror="' + onErrorPlaceholderHtml + '" alt="Avatar" style="width:100%;">' +
+            let chatBox = '<div class="chat-container">' +
+                '<img src="' + avatarImgSrc + '" onerror="' + getErrorPlaceholderHtml(false) + '" alt="Avatar" style="width:100%;">' +
                 '<p><a href=' + link_url + ' target="_blank">' + link_text + '</a></p>' +
                 '<span class="time-right">' + chatTime + '</span>' +
                 '</div>';
@@ -179,8 +216,8 @@
         function myMediaShareChatBoxGenerator(avatarImgSrc, mediaCode, mediaUserName, timestamp) {
             let chatTime = new Date(timestamp / 1000).toLocaleString();
             let link_url = "https://instagram.com/p/" + mediaCode;
-            let chatBox = '<div class="container darker">' +
-                '<img src="' + avatarImgSrc + '" onerror="' + onErrorPlaceholderHtml + '" alt="Avatar" class="right" style="width:100%;">' +
+            let chatBox = '<div class="chat-container darker">' +
+                '<img src="' + avatarImgSrc + '" onerror="' + getErrorPlaceholderHtml(true) + '" alt="Avatar" class="right" style="width:100%;">' +
                 '<p> Post By <a href=' + link_url + ' target="_blank" >' + mediaUserName + '</a></p>' +
                 '<span class="time-left">' + chatTime + '</span>' +
                 '</div>';
@@ -190,8 +227,8 @@
         function otherMediaShareChatBoxGenerator(avatarImgSrc, mediaCode, mediaUserName, timestamp) {
             let chatTime = new Date(timestamp / 1000).toLocaleString();
             let link_url = "https://instagram.com/p/" + mediaCode;
-            let chatBox = '<div class="container">' +
-                '<img src="' + avatarImgSrc + '" onerror="' + onErrorPlaceholderHtml + '" alt="Avatar" style="width:100%;">' +
+            let chatBox = '<div class="chat-container">' +
+                '<img src="' + avatarImgSrc + '" onerror="' + getErrorPlaceholderHtml(false) + '" alt="Avatar" style="width:100%;">' +
                 '<p> Post By <a href=' + link_url + ' target="_blank" >' + mediaUserName + '</a></p>' +
                 '<span class="time-right">' + chatTime + '</span>' +
                 '</div>';
@@ -201,8 +238,8 @@
         function myClipChatBoxGenerator(avatarImgSrc, clipCode, clipUsername, timestamp) {
             let chatTime = new Date(timestamp / 1000).toLocaleString();
             let link_url = "https://instagram.com/p/" + clipCode;
-            let chatBox = '<div class="container darker">' +
-                '<img src="' + avatarImgSrc + '" onerror="' + onErrorPlaceholderHtml + '" alt="Avatar" class="right" style="width:100%;">' +
+            let chatBox = '<div class="chat-container darker">' +
+                '<img src="' + avatarImgSrc + '" onerror="' + getErrorPlaceholderHtml(true) + '" alt="Avatar" class="right" style="width:100%;">' +
                 '<p> Clip By <a href=' + link_url + ' target="_blank" >' + clipUsername + '</a></p>' +
                 '<span class="time-left">' + chatTime + '</span>' +
                 '</div>';
@@ -212,8 +249,8 @@
         function otherClipChatBoxGenerator(avatarImgSrc, clipCode, clipUsername, timestamp) {
             let chatTime = new Date(timestamp / 1000).toLocaleString();
             let link_url = "https://instagram.com/p/" + clipCode;
-            let chatBox = '<div class="container">' +
-                '<img src="' + avatarImgSrc + '" onerror="' + onErrorPlaceholderHtml + '" alt="Avatar" style="width:100%;">' +
+            let chatBox = '<div class="chat-container">' +
+                '<img src="' + avatarImgSrc + '" onerror="' + getErrorPlaceholderHtml(false) + '" alt="Avatar" style="width:100%;">' +
                 '<p> Clip By <a href=' + link_url + ' target="_blank" >' + clipUsername + '</a></p>' +
                 '<span class="time-right">' + chatTime + '</span>' +
                 '</div>';
@@ -222,8 +259,8 @@
 
         function myMediaChatBoxGenerator(avatarImgSrc, timestamp) {
             let chatTime = new Date(timestamp / 1000).toLocaleString();
-            let chatBox = '<div class="container darker">' +
-                '<img src="' + avatarImgSrc + '" onerror="' + onErrorPlaceholderHtml + '" alt="Avatar" class="right" style="width:100%;">' +
+            let chatBox = '<div class="chat-container darker">' +
+                '<img src="' + avatarImgSrc + '" onerror="' + getErrorPlaceholderHtml(true) + '" alt="Avatar" class="right" style="width:100%;">' +
                 '<p>---PRIVATE MEDIA SHARED---</p>' +
                 '<span class="time-left">' + chatTime + '</span>' +
                 '</div>';
@@ -232,8 +269,8 @@
 
         function otherMediaChatBoxGenerator(avatarImgSrc, timestamp) {
             let chatTime = new Date(timestamp / 1000).toLocaleString();
-            let chatBox = '<div class="container">' +
-                '<img src="' + avatarImgSrc + '" onerror="' + onErrorPlaceholderHtml + '" alt="Avatar" style="width:100%;">' +
+            let chatBox = '<div class="chat-container">' +
+                '<img src="' + avatarImgSrc + '" onerror="' + getErrorPlaceholderHtml(false) + '" alt="Avatar" style="width:100%;">' +
                 '<p>---PRIVATE MEDIA SHARED---</p>' +
                 '<span class="time-right">' + chatTime + '</span>' +
                 '</div>';
@@ -248,6 +285,8 @@
         }
 
         function loadMessages() {
+
+            clearChatHistory();
 
             for (let index = allMessagesItemsArray.length - 1; index >= 0; index--) {
                 const element = allMessagesItemsArray[index];
@@ -313,6 +352,10 @@
 
             }
 
+        }
+
+        function clearChatHistory() {
+            chatMessagesDiv.innerHTML = "";
         }
 
     </script>
