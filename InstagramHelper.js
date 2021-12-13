@@ -324,19 +324,24 @@ class InstagramHelper {
     async startUnsending(threadId = undefined, skipRecentXMessagesCount = 10, delay = 3500) {
         if (threadId == null || threadId == undefined) {
             var threadId = window.location.href.split('/')[5]; // Get the chat id automatically from the url, make sure a chat is currently active
-            console.warn("Starting deleting from thread Id : " + threadId);
+            console.warn("Starting deleting from thread Id : " + threadId.toString());
+        }
+
+        if(skipRecentXMessagesCount < 2){
+            console.error("skipRecentXMessagesCount must be greater than 2");
+            return;
         }
 
         var toSkippMessagesCount = 0;
 
         console.warn("Inevitable");
 
-        let threadLink = "https://www.instagram.com/direct/t/" + threadId;
+        let threadLink = "https://www.instagram.com/direct/t/" + threadId.toString();
 
         // if its first message ever sent then stop else continue
         while (this.p_prevCursor != "MINCURSOR") {
 
-            var getMessageAPIUrl = "https://i.instagram.com/api/v1/direct_v2/threads/" + threadId + "/";
+            var getMessageAPIUrl = "https://i.instagram.com/api/v1/direct_v2/threads/" + threadId.toString() + "/";
             if (this.p_oldestCursor != undefined && this.p_oldestCursor != null && this.p_oldestCursor.length > 0) {
                 getMessageAPIUrl = getMessageAPIUrl + "?cursor=" + this.p_oldestCursor + "";
             }
@@ -421,7 +426,7 @@ class InstagramHelper {
                         };
 
                         await fetch(
-                            "https://i.instagram.com/api/v1/direct_v2/threads/" + threadId + "/items/" + messageItemId + "/delete/",
+                            "https://i.instagram.com/api/v1/direct_v2/threads/" + threadId.toString() + "/items/" + messageItemId + "/delete/",
                             p_unsendRequestInitObj
                         ).then((response) => {
                             if (response.status != 200) {
@@ -457,17 +462,17 @@ class InstagramHelper {
     async startUnsendingMedia(threadId = undefined, delay = 3500) {
         if (threadId == null || threadId == undefined) {
             var threadId = window.location.href.split('/')[5]; // Get the chat id automatically from the url, make sure a chat is currently active
-            console.warn("Starting deleting from thread Id : " + threadId);
+            console.warn("Starting deleting from thread Id : " + threadId.toString());
         }
 
         console.warn("Inevitable");
 
-        let threadLink = "https://www.instagram.com/direct/t/" + threadId;
+        let threadLink = "https://www.instagram.com/direct/t/" + threadId.toString();
 
         // if its first message ever sent then stop else continue
         while (this.p_prevCursor != "MINCURSOR") {
 
-            var getMessageAPIUrl = "https://i.instagram.com/api/v1/direct_v2/threads/" + threadId + "/";
+            var getMessageAPIUrl = "https://i.instagram.com/api/v1/direct_v2/threads/" + threadId.toString() + "/";
             if (this.p_oldestCursor != undefined && this.p_oldestCursor != null && this.p_oldestCursor.length > 0) {
                 getMessageAPIUrl = getMessageAPIUrl + "?cursor=" + this.p_oldestCursor + "";
             }
@@ -551,7 +556,7 @@ class InstagramHelper {
                         };
 
                         await fetch(
-                            "https://i.instagram.com/api/v1/direct_v2/threads/" + threadId + "/items/" + messageItemId + "/delete/",
+                            "https://i.instagram.com/api/v1/direct_v2/threads/" + threadId.toString() + "/items/" + messageItemId + "/delete/",
                             p_unsendRequestInitObj
                         ).then((response) => {
                             if (response.status != 200) {
