@@ -72,9 +72,9 @@ class InstagramHelper {
 
     /**
      * provides the ConsumerLibCommon Js File
-     * @param {string} jsFileName default is d7e6aac102d8.js
+     * @param {string} jsFileName default is 4f7f1faf9a94.js
      */
-    async getConsumerLibCommonsJs(jsFileName = "d7e6aac102d8.js") {
+    async getConsumerLibCommonsJs(jsFileName = "4f7f1faf9a94.js") {
 
         let consumerLibCommonsJsRequestUrl = "https://www.instagram.com/static/bundles/es6/ConsumerLibCommons.js/" + jsFileName;
         let consumerLibCommonsJsRequestInit = {
