@@ -89,7 +89,7 @@ This JavaScript has helper methods to perform various tasks automation.
 
 #### 😵 Getting too often "Try again tomorrow" Error or 429 Response Code?
 - Try to close the browser re-open Instagram and logout then login.
-- Instead of running this `ig.startUnsending("your_chat_thread_Id");` run with more higher number of delay by default it is 3500 milliseconds, try other values like 4500, 5500, 6500 `ig.startUnsending("your_chat_thread_Id",5500);`
+- Instead of running this `ig.startUnsending("your_chat_thread_Id",10);` run with more higher number of delay by default it is 3500 milliseconds, try other values like 4500, 5500, 6500 `ig.startUnsending("your_chat_thread_Id",10,5500);`
 
 #### 😒 Any more questions?
 - Check [Issues Page](https://github.com/pishangujeniya/instagram-helper/issues?q=)
