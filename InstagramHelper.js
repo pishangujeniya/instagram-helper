@@ -1,46 +1,63 @@
-/**
- * Instagram Helper
- */
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 class InstagramHelper {
-
-    /**
-     * default constructor
-     */
     constructor() {
-        this.allMessagesItemsArray = [];
-        this.usersChatParticipants = [];
-        this.p_userId = this.getCookie("ds_user_id");
-
-        this.p_itemsIdArray = [];
-        if (localStorage.getItem('messages_ids') != undefined) {
-            this.p_itemsIdArray = localStorage.getItem('messages_ids').split(',');
-        } else {
-            localStorage.setItem('messages_ids', this.p_itemsIdArray);
-        }
-
-        this.deletedItemIdArray = [];
-        if (localStorage.getItem('deleted_messages_ids') != undefined) {
-            this.deletedItemIdArray = localStorage.getItem('deleted_messages_ids').split(',');
-        } else {
-            localStorage.setItem('deleted_messages_ids', this.deletedItemIdArray);
-        }
-
-        this.p_oldestCursor = "";
-        this.p_prevCursor = "";
-        this.getConsumerLibCommonsJs();
-        this.stopGettingMessages = false;
-        this.stopDeletingMessages = false;
+        this.LocalStorageKeys = {
+            instagramWebFBAppId: "instagramWebFBAppId",
+            instagramFBAppId: "instagramFBAppId",
+            instagramWebDesktopFBAppId: "instagramWebDesktopFBAppId",
+            igLiteAppId: "igLiteAppId"
+        };
+        this.SessionStorageKeys = {
+            www_claim_v2: "www-claim-v2"
+        };
+        this.UserId = this.getCookie("ds_user_id");
+        this.getConsumerLibCommonsJs().then(() => {
+            console.info('Read you can now continue');
+        });
     }
-
-    syncWait = ms => {
-        const end = Date.now() + ms
-        while (Date.now() < end) continue
+    syncWait(ms) {
+        var start = Date.now(), now = start;
+        while (now - start < ms) {
+            now = Date.now();
+        }
     }
-
+    waitTimeout(ms) {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log("Waiting for " + ms.toString() + " milliseconds");
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    console.log("Done waiting");
+                    resolve(ms);
+                }, ms);
+            });
+        });
+    }
     /**
-     * provides cookie value if exists else provides empty string
-     * @param {string} c_name cookie key name
+     * generates random integer between 1 and provided
+     * @param {number} maxNumber max number between which to generate random integer (default value is 10)
      */
+    getRandomIntegerBetween(maxNumber = 10) {
+        if (maxNumber != undefined && maxNumber != null && maxNumber > 0) {
+            // its provided
+        }
+        else {
+            maxNumber = 10;
+        }
+        return Math.floor((Math.random() * maxNumber) + 1);
+    }
+    /**
+   * provides cookie value if exists else provides empty string
+   * @param {string} c_name cookie key name
+   */
     getCookie(c_name) {
         if (document.cookie.length > 0) {
             var c_start = document.cookie.indexOf(c_name + "=");
@@ -55,100 +72,72 @@ class InstagramHelper {
         }
         return "";
     }
-
-    /**
-     * generates random integer between 1 and provided
-     * @param {number} maxNumber max number between which to generate random integer (default value is 10)
-     */
-    getRandomIntegerBetween(maxNumber) {
-        if (maxNumber != undefined && maxNumber != null && maxNumber > 0) {
-            // its provided
-        } else {
-            maxNumber = 10;
-        }
-        return Math.floor((Math.random() * maxNumber) + 1);
-
-    }
-
     /**
      * provides the ConsumerLibCommon Js File
      * @param {string} jsFileName default is 4f7f1faf9a94.js
      */
-    async getConsumerLibCommonsJs(jsFileName = "4f7f1faf9a94.js") {
-
-        let consumerLibCommonsJsRequestUrl = "https://www.instagram.com/static/bundles/es6/ConsumerLibCommons.js/" + jsFileName;
-        let consumerLibCommonsJsRequestInit = {
-            "headers": {
-                "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-                "accept-language": "en-US,en;q=0.9",
-                "cache-control": "no-cache",
-                "pragma": "no-cache",
-                "sec-fetch-dest": "document",
-                "sec-fetch-mode": "navigate",
-                "sec-fetch-site": "none",
-                "sec-fetch-user": "?1",
-                "upgrade-insecure-requests": "1"
-            },
-            "referrerPolicy": "no-referrer-when-downgrade",
-            "body": null,
-            "method": "GET",
-            "mode": "cors",
-            "credentials": "include"
-        };
-
-        await fetch(
-            consumerLibCommonsJsRequestUrl,
-            consumerLibCommonsJsRequestInit
-        )
-            .then((response) => {
+    getConsumerLibCommonsJs(jsFileName = "4f7f1faf9a94.js") {
+        return __awaiter(this, void 0, void 0, function* () {
+            let consumerLibCommonsJsRequestUrl = "https://www.instagram.com/static/bundles/es6/ConsumerLibCommons.js/" + jsFileName;
+            let consumerLibCommonsJsRequestInit = {
+                "headers": {
+                    "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+                    "accept-language": "en-US,en;q=0.9",
+                    "cache-control": "no-cache",
+                    "pragma": "no-cache",
+                    "sec-fetch-dest": "document",
+                    "sec-fetch-mode": "navigate",
+                    "sec-fetch-site": "none",
+                    "sec-fetch-user": "?1",
+                    "upgrade-insecure-requests": "1"
+                },
+                "referrerPolicy": "no-referrer-when-downgrade",
+                "body": null,
+                "method": "GET",
+                mode: "cors",
+                credentials: "include"
+            };
+            yield fetch(consumerLibCommonsJsRequestUrl, consumerLibCommonsJsRequestInit)
+                .then((response) => {
                 if (response.status != 200) {
-                    console.error("Try again tomorrow");
-                } else {
+                    throw new Error("Try again tomorrow");
+                }
+                else {
                     return response.text();
                 }
             })
-            .then((data) => {
-                let appIdVariableNames = [
-                    "instagramFBAppId",
-                    "instagramWebFBAppId",
-                    "instagramWebDesktopFBAppId",
-                    "igLiteAppId"
-                ];
-
-                appIdVariableNames.forEach(singleppIdVariableName => {
-                    let searchString = singleppIdVariableName + "='";
-                    let indexOfSearchedStringVariableName = data.indexOf(searchString);
-                    let valueData = data.substring(indexOfSearchedStringVariableName + searchString.length);
-                    let singleAppIdValue = valueData.substring(0, valueData.indexOf("'"));
-                    // console.warn(singleppIdVariableName + " = " + singleAppIdValue);
-                    localStorage.setItem(singleppIdVariableName, singleAppIdValue);
-                });
+                .then((data) => {
+                if (data) {
+                    let appIdVariableNames = [
+                        this.LocalStorageKeys.instagramFBAppId,
+                        this.LocalStorageKeys.instagramWebFBAppId,
+                        this.LocalStorageKeys.instagramWebDesktopFBAppId,
+                        this.LocalStorageKeys.igLiteAppId
+                    ];
+                    appIdVariableNames.forEach(singleppIdVariableName => {
+                        let searchString = singleppIdVariableName + "='";
+                        let indexOfSearchedStringVariableName = data.indexOf(searchString);
+                        let valueData = data.substring(indexOfSearchedStringVariableName + searchString.length);
+                        let singleAppIdValue = valueData.substring(0, valueData.indexOf("'"));
+                        // console.warn(singleppIdVariableName + " = " + singleAppIdValue);
+                        localStorage.setItem(singleppIdVariableName, singleAppIdValue);
+                    });
+                }
+                else {
+                    throw new Error("getConsumerLibCommonsJs not found");
+                }
             });
+        });
     }
-
-
-    /**
-     * Fetch the messages and its itemIds
-     */
-    async getAllMessagesData(threadId) {
-
-        if (threadId == null || threadId == undefined) {
-            console.error("threadId must be passed");
-            return false;
-        }
-
-        let threadLink = "https://www.instagram.com/direct/t/" + threadId;
-
-        // if its first message ever sent then stop else continue
-        while (this.p_prevCursor != "MINCURSOR" && this.stopGettingMessages == false) {
-
-            var getMessageAPIUrl = "https://i.instagram.com/api/v1/direct_v2/threads/" + threadId + "/";
-            if (this.p_oldestCursor != undefined && this.p_oldestCursor != null && this.p_oldestCursor.length > 0) {
-                getMessageAPIUrl = getMessageAPIUrl + "?cursor=" + this.p_oldestCursor + "";
+    getMessagesHttpRequest(threadId, oldestCursor = '') {
+        var _a, _b, _c, _d;
+        return __awaiter(this, void 0, void 0, function* () {
+            var threadLink = "https://www.instagram.com/direct/t/" + threadId.toString();
+            var getMessageAPIUrl = "https://i.instagram.com/api/v1/direct_v2/threads/" + threadId.toString() + "/";
+            if (oldestCursor != undefined && oldestCursor != null && oldestCursor.length > 0) {
+                getMessageAPIUrl = getMessageAPIUrl + "?cursor=" + oldestCursor + "";
             }
-
             var getMessagesRequestInit = {
-                "credentials": "include",
                 "headers": {
                     "accept": "*/*",
                     "accept-language": "en-US,en;q=0.9",
@@ -157,507 +146,136 @@ class InstagramHelper {
                     "sec-fetch-dest": "empty",
                     "sec-fetch-mode": "cors",
                     "sec-fetch-site": "same-origin",
-                    "x-ig-app-id": localStorage.getItem("instagramWebFBAppId"),
-                    "x-ig-www-claim": sessionStorage.getItem("www-claim-v2"),
-                    "x-requested-with": "XMLHttpRequest"
+                    "x-requested-with": "XMLHttpRequest",
+                    "x-ig-app-id": (_b = (_a = localStorage.getItem(this.LocalStorageKeys.instagramWebFBAppId)) === null || _a === void 0 ? void 0 : _a.toString()) !== null && _b !== void 0 ? _b : '',
+                    "x-ig-www-claim": (_d = (_c = sessionStorage.getItem(this.SessionStorageKeys.www_claim_v2)) === null || _c === void 0 ? void 0 : _c.toString()) !== null && _d !== void 0 ? _d : '',
                 },
                 "referrer": threadLink,
                 "referrerPolicy": "no-referrer-when-downgrade",
                 "body": null,
                 "method": "GET",
+                "mode": "cors",
+                "credentials": "include",
+            };
+            return yield fetch(getMessageAPIUrl, getMessagesRequestInit).then((value) => __awaiter(this, void 0, void 0, function* () {
+                if (value.status != 200) {
+                    throw new Error("Try again tomorrow");
+                }
+                else {
+                    return yield value.json().then(response => {
+                        if (response) {
+                            return response;
+                        }
+                        else {
+                            throw new Error("Failed to get messages response");
+                        }
+                    });
+                }
+            }));
+        });
+    }
+    deleteMessageHttpRequest(threadId, messageItemId) {
+        var _a, _b, _c, _d;
+        return __awaiter(this, void 0, void 0, function* () {
+            var threadLink = "https://www.instagram.com/direct/t/" + threadId.toString();
+            var deleteMessageAPIUrl = "https://i.instagram.com/api/v1/direct_v2/threads/" + threadId.toString() + "/items/" + messageItemId + "/delete/";
+            var deleteMessageRequestInit = {
+                "credentials": "include",
+                "headers": {
+                    "accept": "*/*",
+                    "accept-language": "en-US,en;q=0.9",
+                    "cache-control": "no-cache",
+                    "content-type": "application/x-www-form-urlencoded",
+                    "pragma": "no-cache",
+                    "sec-fetch-dest": "empty",
+                    "sec-fetch-mode": "cors",
+                    "sec-fetch-site": "same-origin",
+                    "x-csrftoken": this.getCookie("csrftoken"),
+                    "x-ig-app-id": (_b = (_a = localStorage.getItem(this.LocalStorageKeys.instagramWebFBAppId)) === null || _a === void 0 ? void 0 : _a.toString()) !== null && _b !== void 0 ? _b : '',
+                    "x-ig-www-claim": (_d = (_c = sessionStorage.getItem(this.SessionStorageKeys.www_claim_v2)) === null || _c === void 0 ? void 0 : _c.toString()) !== null && _d !== void 0 ? _d : '',
+                    "x-requested-with": "XMLHttpRequest"
+                },
+                "referrer": threadLink,
+                "referrerPolicy": "no-referrer-when-downgrade",
+                "body": null,
+                "method": "POST",
                 "mode": "cors"
             };
-
-            await fetch(
-                getMessageAPIUrl,
-                getMessagesRequestInit
-            )
-                .then((response) => {
-                    if (response.status != 200) {
-                        console.error("Try again tomorrow");
-                        throw response.status;
-                    } else {
-                        return response.json();
-                    }
-                })
-                .then((data) => {
-                    // console.log(data);
-                    console.log("getting messages...");
-
-                    //#region Own Inviter Adding to Participants
-                    let inviterChatParticipant = {
-                        "pk": data.thread.inviter.pk,
-                        "profile_pic_url": data.thread.inviter.profile_pic_url,
-                        "full_name": data.thread.inviter.full_name,
-                        "username": data.thread.inviter.username
-                    }
-                    let isChatParticipantAlreadyExists = false;
-                    for (let index = 0; index < this.usersChatParticipants.length; index++) {
-                        const singleUserChatParticipant = this.usersChatParticipants[index];
-                        if (singleUserChatParticipant.pk == inviterChatParticipant.pk) {
-                            isChatParticipantAlreadyExists = true;
-                            break;
-                        }
-                    }
-                    if (!isChatParticipantAlreadyExists) {
-                        this.usersChatParticipants.push(inviterChatParticipant);
-                    }
-                    //#endregion
-
-                    //#region Thread Participants adding
-                    data.thread.users.forEach(element => {
-                        let chatParticipant = {
-                            "pk": element.pk,
-                            "profile_pic_url": element.profile_pic_url,
-                            "full_name": element.full_name,
-                            "username": element.username
-                        };
-                        let isChatParticipantAlreadyExists = false;
-                        for (let index = 0; index < this.usersChatParticipants.length; index++) {
-                            const singleUserChatParticipant = this.usersChatParticipants[index];
-                            if (singleUserChatParticipant.pk == element.pk) {
-                                isChatParticipantAlreadyExists = true;
-                                break;
-                            }
-                        }
-                        if (!isChatParticipantAlreadyExists) {
-                            this.usersChatParticipants.push(chatParticipant);
-                        }
-                    });
-                    //#endregion
-
-
-                    //#region Adding Messages
-                    data.thread.items.forEach(element => {
-
-                        var isExists = false;
-
-                        for (let index = 0; index < this.allMessagesItemsArray.length; index++) {
-                            const existingElement = this.allMessagesItemsArray[index];
-                            if (existingElement.item_id.toString() == element.item_id.toString()) {
-                                isExists = true;
-                                break;
-                            }
-                        }
-                        if (!isExists) {
-                            this.allMessagesItemsArray.push(element);
-                        }
-                    });
-                    //#endregion
-                    data.thread.items.forEach(element => {
-
-                        if (element.user_id.toString() == this.p_userId.toString()) {
-                            if (!this.p_itemsIdArray.includes(element.item_id.toString())) {
-                                this.p_itemsIdArray.push(element.item_id.toString());
-                            }
-                        }
-
-                        this.allMessagesItemsArray.push(element);
-                    });
-
-                    this.p_oldestCursor = data.thread.oldest_cursor;
-                    this.p_prevCursor = data.thread.prev_cursor;
-
-                })
-                .catch((error) => {
-                    console.error(error);
-                    return false;
-                });
-
-        }
-
-        localStorage.setItem('messages_ids', this.p_itemsIdArray);
-        console.warn("All Messages fetched, No More messages to fetch");
-        return true;
-    }
-
-    async getInboxRequest() {
-
-        var getInboxRequestUrl = "https://i.instagram.com/api/v1/direct_v2/inbox/?persistentBadging=true&folder=&limit=10&thread_message_limit=10";
-
-        var getInboxRequestInit = {
-            "headers": {
-                "accept": "*/*",
-                "accept-language": "en-US,en;q=0.9",
-                "cache-control": "no-cache",
-                "pragma": "no-cache",
-                "sec-fetch-dest": "empty",
-                "sec-fetch-mode": "cors",
-                "sec-fetch-site": "same-site",
-                "x-ig-app-id": localStorage.getItem("instagramWebFBAppId"),
-                "x-ig-www-claim": sessionStorage.getItem("www-claim-v2")
-            },
-            "referrer": "https://www.instagram.com/",
-            "referrerPolicy": "strict-origin-when-cross-origin",
-            "body": null,
-            "method": "GET",
-            "mode": "cors",
-            "credentials": "include"
-        };
-
-        await fetch(
-            getInboxRequestUrl,
-            getInboxRequestInit
-        )
-            .then(async (response) => {
-                if (response.status != 200) {
-                    console.error("Try again tomorrow");
-                } else {
-                    return response.json();
+            return yield fetch(deleteMessageAPIUrl, deleteMessageRequestInit).then((response) => {
+                if (response.status >= 200 && response.status < 300) {
+                    console.info("Deleting...");
+                    return response;
                 }
-            })
-            .then(async (data) => {
-                console.log(data);
+                else {
+                    throw new Error("Some messages skipped deleting");
+                }
             }).catch((error) => {
-                console.error(error);
+                throw new Error(error);
             });
-
+        });
     }
-
     /**
      * Start Unsending messages
      * @param {string} threadId Chat Thread Id
      * @param {number} skipRecentXMessagesCount Number of messages to skip
      * @param {number} delay Delay in milliseconds
-     * @returns 
+     * @returns
      */
-    async startUnsending(threadId = undefined, skipRecentXMessagesCount = 10, delay = 3500) {
-        if (threadId == null || threadId == undefined) {
-            var threadId = window.location.href.split('/')[5]; // Get the chat id automatically from the url, make sure a chat is currently active
-            console.warn("Starting deleting from thread Id : " + threadId.toString());
-        }
-
-        if(skipRecentXMessagesCount < 2){
-            console.error("skipRecentXMessagesCount must be greater than 2");
-            return;
-        }
-
-        var toSkippMessagesCount = 0;
-
-        console.warn("Inevitable");
-
-        let threadLink = "https://www.instagram.com/direct/t/" + threadId.toString();
-
-        // if its first message ever sent then stop else continue
-        while (this.p_prevCursor != "MINCURSOR") {
-
-            var getMessageAPIUrl = "https://i.instagram.com/api/v1/direct_v2/threads/" + threadId.toString() + "/";
-            if (this.p_oldestCursor != undefined && this.p_oldestCursor != null && this.p_oldestCursor.length > 0) {
-                getMessageAPIUrl = getMessageAPIUrl + "?cursor=" + this.p_oldestCursor + "";
+    startUnsending(threadId = '', skipRecentXMessagesCount = 10, delay = 3500) {
+        var _a, _b, _c, _d, _e;
+        return __awaiter(this, void 0, void 0, function* () {
+            if (threadId == null || threadId == undefined) {
+                threadId = window.location.href.split('/')[5]; // Get the chat id automatically from the url, make sure a chat is currently active
+                console.warn("Starting deleting from thread Id : " + threadId.toString());
             }
-
-            var getMessagesRequestInit = {
-                "credentials": "include",
-                "headers": {
-                    "accept": "*/*",
-                    "accept-language": "en-US,en;q=0.9",
-                    "cache-control": "no-cache",
-                    "pragma": "no-cache",
-                    "sec-fetch-dest": "empty",
-                    "sec-fetch-mode": "cors",
-                    "sec-fetch-site": "same-origin",
-                    "x-ig-app-id": localStorage.getItem("instagramWebFBAppId"),
-                    "x-ig-www-claim": sessionStorage.getItem("www-claim-v2"),
-                    "x-requested-with": "XMLHttpRequest"
-                },
-                "referrer": threadLink,
-                "referrerPolicy": "no-referrer-when-downgrade",
-                "body": null,
-                "method": "GET",
-                "mode": "cors"
-            };
-
-            await fetch(
-                getMessageAPIUrl,
-                getMessagesRequestInit
-            )
-                .then(async (response) => {
-                    if (response.status != 200) {
-                        console.error("Try again tomorrow");
-                    } else {
-                        return response.json();
-                    }
-                })
-                .then(async (data) => {
-                    // console.log(data);
-
-                    let itemIdsToDelete = [];
-
-                    console.log("getting messages...");
-                    data.thread.items.forEach(element => {
-                        if (element.user_id.toString() == this.p_userId.toString()) {
-                            if (!itemIdsToDelete.includes(element.item_id.toString())) {
-                                itemIdsToDelete.push(element.item_id.toString());
-                            }
-                        }
-                    });
-
-                    //#region  Deleting Messages
-
-                    for (let itemIdIndex = 0; itemIdIndex < itemIdsToDelete.length; itemIdIndex++) {
-                        const messageItemId = itemIdsToDelete[itemIdIndex];
-
-                        if (toSkippMessagesCount < skipRecentXMessagesCount) {
-                            toSkippMessagesCount = toSkippMessagesCount + 1;
-                            continue;
-                        }
-
-                        var p_unsendRequestInitObj = {
-                            "credentials": "include",
-                            "headers": {
-                                "accept": "*/*",
-                                "accept-language": "en-US,en;q=0.9",
-                                "cache-control": "no-cache",
-                                "content-type": "application/x-www-form-urlencoded",
-                                "pragma": "no-cache",
-                                "sec-fetch-dest": "empty",
-                                "sec-fetch-mode": "cors",
-                                "sec-fetch-site": "same-origin",
-                                "x-csrftoken": this.getCookie("csrftoken"),
-                                "x-ig-app-id": localStorage.getItem("instagramWebFBAppId"),
-                                "x-ig-www-claim": sessionStorage.getItem("www-claim-v2"),
-                                "x-requested-with": "XMLHttpRequest"
-                            },
-                            "referrer": threadLink,
-                            "referrerPolicy": "no-referrer-when-downgrade",
-                            "body": null,
-                            "method": "POST",
-                            "mode": "cors"
-                        };
-
-                        await fetch(
-                            "https://i.instagram.com/api/v1/direct_v2/threads/" + threadId.toString() + "/items/" + messageItemId + "/delete/",
-                            p_unsendRequestInitObj
-                        ).then((response) => {
-                            if (response.status != 200) {
-                                console.error("Some messages skipped");
-                            } else {
-                                console.info("Deleting...");
-                            }
-                        }).catch((error) => {
-                            console.error(error);
-                        });
-
-                        this.syncWait(delay);
-
-                    }
-
-                    //#endregion Deleting Messages
-
-                    this.p_oldestCursor = data.thread.oldest_cursor;
-                    this.p_prevCursor = data.thread.prev_cursor;
-
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
-
-        }
-
-        console.warn("All messages deleted.");
-        return true;
-
-    }
-
-    async startUnsendingMedia(threadId = undefined, delay = 3500) {
-        if (threadId == null || threadId == undefined) {
-            var threadId = window.location.href.split('/')[5]; // Get the chat id automatically from the url, make sure a chat is currently active
-            console.warn("Starting deleting from thread Id : " + threadId.toString());
-        }
-
-        console.warn("Inevitable");
-
-        let threadLink = "https://www.instagram.com/direct/t/" + threadId.toString();
-
-        // if its first message ever sent then stop else continue
-        while (this.p_prevCursor != "MINCURSOR") {
-
-            var getMessageAPIUrl = "https://i.instagram.com/api/v1/direct_v2/threads/" + threadId.toString() + "/";
-            if (this.p_oldestCursor != undefined && this.p_oldestCursor != null && this.p_oldestCursor.length > 0) {
-                getMessageAPIUrl = getMessageAPIUrl + "?cursor=" + this.p_oldestCursor + "";
+            if (skipRecentXMessagesCount < 2) {
+                throw new Error("skipRecentXMessagesCount must be greater than 2");
             }
-
-            var getMessagesRequestInit = {
-                "credentials": "include",
-                "headers": {
-                    "accept": "*/*",
-                    "accept-language": "en-US,en;q=0.9",
-                    "cache-control": "no-cache",
-                    "pragma": "no-cache",
-                    "sec-fetch-dest": "empty",
-                    "sec-fetch-mode": "cors",
-                    "sec-fetch-site": "same-origin",
-                    "x-ig-app-id": localStorage.getItem("instagramWebFBAppId"),
-                    "x-ig-www-claim": sessionStorage.getItem("www-claim-v2"),
-                    "x-requested-with": "XMLHttpRequest"
-                },
-                "referrer": threadLink,
-                "referrerPolicy": "no-referrer-when-downgrade",
-                "body": null,
-                "method": "GET",
-                "mode": "cors"
-            };
-
-            await fetch(
-                getMessageAPIUrl,
-                getMessagesRequestInit
-            )
-                .then(async (response) => {
-                    if (response.status != 200) {
-                        console.error("Try again tomorrow");
-                    } else {
-                        return response.json();
-                    }
-                })
-                .then(async (data) => {
-                    // console.log(data);
-
-                    let itemIdsToDelete = [];
-
-                    console.log("getting media...");
-                    data.thread.items.forEach(element => {
-                        // console.log("element is text " + JSON.stringify(element));
-
-                        if (element.user_id.toString() == this.p_userId.toString()) {
-                            if (element.item_type !== "text") {
-                                if (!itemIdsToDelete.includes(element.item_id.toString())) {
-                                    itemIdsToDelete.push(element.item_id.toString());
+            var toSkippMessagesCount = 0;
+            console.warn("Inevitable");
+            var oldestCursor = "";
+            var prevCursor = "";
+            // if its first message ever sent then stop else continue
+            while (prevCursor != "MINCURSOR") {
+                var getMessagesResponse = yield this.getMessagesHttpRequest(threadId, oldestCursor);
+                let itemIdsToDelete = new Array();
+                (_a = getMessagesResponse === null || getMessagesResponse === void 0 ? void 0 : getMessagesResponse.thread) === null || _a === void 0 ? void 0 : _a.items.forEach(element => {
+                    var _a, _b, _c, _d;
+                    if (((_a = element === null || element === void 0 ? void 0 : element.user_id) === null || _a === void 0 ? void 0 : _a.toString()) == this.UserId.toString()) {
+                        if ((element === null || element === void 0 ? void 0 : element.item_type) != 'video_call_event') {
+                            // Avoiding video call events in the chat to be deleted
+                            if ((_b = element === null || element === void 0 ? void 0 : element.item_id) === null || _b === void 0 ? void 0 : _b.toString()) {
+                                if (!itemIdsToDelete.includes((_c = element === null || element === void 0 ? void 0 : element.item_id) === null || _c === void 0 ? void 0 : _c.toString())) {
+                                    itemIdsToDelete.push((_d = element === null || element === void 0 ? void 0 : element.item_id) === null || _d === void 0 ? void 0 : _d.toString());
                                 }
                             }
                         }
-                    });
-
-                    //#region  Deleting Messages
-
-                    for (let itemIdIndex = 0; itemIdIndex < itemIdsToDelete.length; itemIdIndex++) {
-                        const messageItemId = itemIdsToDelete[itemIdIndex];
-
-                        var p_unsendRequestInitObj = {
-                            "credentials": "include",
-                            "headers": {
-                                "accept": "*/*",
-                                "accept-language": "en-US,en;q=0.9",
-                                "cache-control": "no-cache",
-                                "content-type": "application/x-www-form-urlencoded",
-                                "pragma": "no-cache",
-                                "sec-fetch-dest": "empty",
-                                "sec-fetch-mode": "cors",
-                                "sec-fetch-site": "same-origin",
-                                "x-csrftoken": this.getCookie("csrftoken"),
-                                "x-ig-app-id": localStorage.getItem("instagramWebFBAppId"),
-                                "x-ig-www-claim": sessionStorage.getItem("www-claim-v2"),
-                                "x-requested-with": "XMLHttpRequest"
-                            },
-                            "referrer": threadLink,
-                            "referrerPolicy": "no-referrer-when-downgrade",
-                            "body": null,
-                            "method": "POST",
-                            "mode": "cors"
-                        };
-
-                        await fetch(
-                            "https://i.instagram.com/api/v1/direct_v2/threads/" + threadId.toString() + "/items/" + messageItemId + "/delete/",
-                            p_unsendRequestInitObj
-                        ).then((response) => {
-                            if (response.status != 200) {
-                                console.error("Some messages skipped");
-                            } else {
-                                console.info("Deleting...");
-                            }
-                        }).catch((error) => {
-                            console.error(error);
-                        });
-
-                        this.syncWait(delay);
-
                     }
-
-                    //#endregion Deleting Messages
-
-                    this.p_oldestCursor = data.thread.oldest_cursor;
-                    this.p_prevCursor = data.thread.prev_cursor;
-
-                })
-                .catch((error) => {
-                    console.error(error);
                 });
-
-        }
-
-        console.warn("All media deleted.");
-        return true;
-
-    }
-
-    /**
-     * Deletes all the follow requests for private account
-     * @param {string} deleteButtonCSSClassName | provide the css class name of Delete button by Inspect Element
-     */
-    async deleteAllFollowRequests(deleteButtonCSSClassName) {
-
-        let t = document.getElementsByClassName(deleteButtonCSSClassName);
-
-        for (let index = 0; index < t.length; index++) {
-            const element = t[index];
-            this.syncWait(1000);
-            element.click();
-        }
-
-    }
-
-    downloadMessagesDetails() {
-        this.downloadJsonFile(
-            {
-                "myUserId": this.p_userId,
-                "allMessagesItemsArray": this.allMessagesItemsArray,
-                "usersChatParticipants": this.usersChatParticipants,
-            },
-            "InstaGramHelperChatMessagesData"
-        );
-    }
-
-    /**
-     * Downloads JSON file from Object in Browser
-     * @param {*} jsonDataObject Json Object
-     * @param {string} fileNameExcludingExtension 
-     */
-    downloadJsonFile(jsonDataObject, fileNameExcludingExtension = 'data') {
-        const blob = new Blob(['\ufeff' + JSON.stringify(jsonDataObject)], {
-            type: 'text/json;charset=utf-8;'
+                //#region  Deleting Messages
+                for (let itemIdIndex = 0; itemIdIndex < itemIdsToDelete.length; itemIdIndex++) {
+                    const messageItemId = itemIdsToDelete[itemIdIndex];
+                    if (toSkippMessagesCount < skipRecentXMessagesCount) {
+                        toSkippMessagesCount = toSkippMessagesCount + 1;
+                        continue;
+                    }
+                    yield this.deleteMessageHttpRequest(threadId, messageItemId);
+                    yield this.waitTimeout(this.getRandomIntegerBetween(delay));
+                }
+                //#endregion Deleting Messages
+                oldestCursor = (_c = (_b = getMessagesResponse === null || getMessagesResponse === void 0 ? void 0 : getMessagesResponse.thread) === null || _b === void 0 ? void 0 : _b.oldest_cursor) !== null && _c !== void 0 ? _c : '';
+                prevCursor = (_e = (_d = getMessagesResponse === null || getMessagesResponse === void 0 ? void 0 : getMessagesResponse.thread) === null || _d === void 0 ? void 0 : _d.prev_cursor) !== null && _e !== void 0 ? _e : '';
+            }
+            console.warn("All messages deleted.");
         });
-        const dwldLink = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-        const isSafariBrowser = navigator.userAgent.indexOf('Safari') !== -1 &&
-            navigator.userAgent.indexOf('Chrome') === -1;
-        if (isSafariBrowser) {
-            // for safari
-            dwldLink.setAttribute('target', '_blank');
-        }
-        dwldLink.setAttribute('href', url);
-        dwldLink.setAttribute('download', fileNameExcludingExtension + '.json');
-        dwldLink.style.visibility = 'hidden';
-        document.body.appendChild(dwldLink);
-        dwldLink.click();
-        document.body.removeChild(dwldLink);
     }
-
-    /**
-     * Downloads any type of file containing text in browser
-     * @param {*} text String Text of File
-     * @param {string} fileNameExcludingExtension File name without Extension
-     * @param {string} extension Extension of file with downloadTextFile
-     */
-    downloadTextFile(text, fileNameExcludingExtension = 'data', extension = '.txt') {
-        var element = document.createElement('a');
-        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-        element.setAttribute('download', fileNameExcludingExtension + extension);
-
-        element.style.display = 'none';
-        document.body.appendChild(element);
-
-        element.click();
-
-        document.body.removeChild(element);
+}
+class GetMessagesResponseModel {
+}
+class Thread {
+    constructor() {
+        this.items = [];
     }
-
+}
+class Item {
 }
