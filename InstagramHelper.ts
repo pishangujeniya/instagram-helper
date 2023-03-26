@@ -1,5 +1,12 @@
 class InstagramHelper {
     private UserId: string;
+    private UserCharParticipants: Array<ChatParticipant> = new Array<ChatParticipant>();
+    private AllMessagesItemsArray: Array<Item> = new Array<Item>();
+    private PurposePromptText: string = "What you want to do with the messages? \nA: Unsend \nB: Download \nC: Exit";
+    private ThreadIdPromptText: string = "Please enter your chat Thread ID.";
+    private SkipRecentXMessagesCountPromptText: string = "Please enter number of recent messages you want to skip. Default is 10.";
+    private DelayPromptText: string = "Please enter number of seconds to randomly wait between each message to delete. Default is 3 seconds";
+    private SkipTextMessagesPromptText: string = "Do you want to skip unsending text messages - yes/no? It means it will unsend media contents. Default is no.";
 
     private LocalStorageKeys = {
         instagramWebFBAppId: "instagramWebFBAppId",
@@ -16,16 +23,28 @@ class InstagramHelper {
 
         this.UserId = this.getCookie("ds_user_id");
 
-        this.getConsumerLibCommonsJs().then(() => {
-            console.info('Read you can now continue');
+        this.getConsumerLibCommonsJs().then(async () => {
+            console.info('Ready you can now continue');
+            await this.askPrompts()
         });
     }
 
-    private syncWait(ms: number) {
-        var start = Date.now(),
-            now = start;
-        while (now - start < ms) {
-            now = Date.now();
+    private async askPrompts() {
+        var purposePromptValue = prompt(this.PurposePromptText);
+        switch (purposePromptValue) {
+            case 'A' || 'a':
+                // Unsend
+                await this.startUnsending();
+                break;
+            case 'B' || 'b':
+                // Download
+                await this.downloadMessagesDetails();
+                break;
+            case 'C' || 'c':
+                return;
+            default:
+                alert("Please enter a valid Input. Bye");
+                throw new Error("Please enter a valid Input.");
         }
     }
 
@@ -40,7 +59,7 @@ class InstagramHelper {
     }
 
     /**
-     * generates random integer between 1 and provided
+     * generates random integer between 1 and provided (maxNumber including)
      * @param {number} maxNumber max number between which to generate random integer (default value is 10)
      */
     private getRandomIntegerBetween(maxNumber: number = 10) {
@@ -132,6 +151,9 @@ class InstagramHelper {
             });
     }
 
+    /**
+     * Sends HTTP Request to Get Messages
+     */
     private async getMessagesHttpRequest(threadId: string, oldestCursor: string = ''): Promise<GetMessagesResponseModel> {
 
         var threadLink = "https://www.instagram.com/direct/t/" + threadId.toString();
@@ -180,6 +202,12 @@ class InstagramHelper {
         });
     }
 
+    /**
+     * Sends a delete message HTTP Request for a single message from a thread
+     * @param threadId string
+     * @param messageItemId string
+     * @returns void
+     */
     private async deleteMessageHttpRequest(threadId: string, messageItemId: string): Promise<Response> {
 
         var threadLink = "https://www.instagram.com/direct/t/" + threadId.toString();
@@ -225,19 +253,22 @@ class InstagramHelper {
 
     /**
      * Start Unsending messages
-     * @param {string} threadId Chat Thread Id
-     * @param {number} skipRecentXMessagesCount Number of messages to skip
-     * @param {number} delay Delay in milliseconds
-     * @returns 
+     * @param startUnsendingRequest request model
      */
-    public async startUnsending(threadId: string = '', skipRecentXMessagesCount: number = 10, delay: number = 3500) {
-        if (threadId == null || threadId == undefined) {
-            threadId = window.location.href.split('/')[5]; // Get the chat id automatically from the url, make sure a chat is currently active
-            console.warn("Starting deleting from thread Id : " + threadId.toString());
+    private async unsend(startUnsendingRequest: StartUnsendingRequest) {
+        if (startUnsendingRequest.thread_id == null || startUnsendingRequest.thread_id == undefined || startUnsendingRequest.thread_id.length < 1) {
+            startUnsendingRequest.thread_id = window.location.href.split('/')[5]; // Get the chat id automatically from the url, make sure a chat is currently active
+            console.warn("Starting deleting from thread Id : " + startUnsendingRequest.thread_id.toString());
         }
 
-        if (skipRecentXMessagesCount < 2) {
+        if (startUnsendingRequest.skip_recent_x_messages_count < 2) {
             throw new Error("skipRecentXMessagesCount must be greater than 2");
+        }
+
+        var skipItemTypesList = new Array<string>();
+        skipItemTypesList.push("video_call_event"); // Default Items which need to be skipped
+        if (startUnsendingRequest.skip_text_messages) {
+            skipItemTypesList.push("text");
         }
 
         var toSkippMessagesCount = 0;
@@ -250,15 +281,14 @@ class InstagramHelper {
         // if its first message ever sent then stop else continue
         while (prevCursor != "MINCURSOR") {
 
-            var getMessagesResponse = await this.getMessagesHttpRequest(threadId, oldestCursor);
+            var getMessagesResponse = await this.getMessagesHttpRequest(startUnsendingRequest.thread_id, oldestCursor);
 
             let itemIdsToDelete: Array<string> = new Array<string>();
 
             getMessagesResponse?.thread?.items.forEach(element => {
                 if (element?.user_id?.toString() == this.UserId.toString()) {
-                    if (element?.item_type != 'video_call_event') {
-                        // Avoiding video call events in the chat to be deleted
-
+                    // Skipping those types of messages
+                    if (element?.item_type && skipItemTypesList.includes(element?.item_type?.toString())) {
                         if (element?.item_id?.toString()) {
                             if (!itemIdsToDelete.includes(element?.item_id?.toString())) {
                                 itemIdsToDelete.push(element?.item_id?.toString());
@@ -273,14 +303,14 @@ class InstagramHelper {
             for (let itemIdIndex = 0; itemIdIndex < itemIdsToDelete.length; itemIdIndex++) {
                 const messageItemId = itemIdsToDelete[itemIdIndex];
 
-                if (toSkippMessagesCount < skipRecentXMessagesCount) {
+                if (toSkippMessagesCount < startUnsendingRequest.skip_recent_x_messages_count) {
                     toSkippMessagesCount = toSkippMessagesCount + 1;
                     continue;
                 }
 
-                await this.deleteMessageHttpRequest(threadId, messageItemId);
+                await this.deleteMessageHttpRequest(startUnsendingRequest.thread_id, messageItemId);
 
-                await this.waitTimeout(this.getRandomIntegerBetween(delay));
+                await this.waitTimeout(this.getRandomIntegerBetween(startUnsendingRequest.delay));
             }
 
             //#endregion Deleting Messages
@@ -291,6 +321,210 @@ class InstagramHelper {
         }
 
         console.warn("All messages deleted.");
+    }
+
+    /**
+     * Start Unsending messages with prompt
+     */
+    public async startUnsending() {
+        // Asking Prompts
+        var thread_id = '';
+        var threadIdPromptValue = prompt(this.ThreadIdPromptText);
+        if (threadIdPromptValue != null && threadIdPromptValue != undefined && threadIdPromptValue.length > 0) {
+            thread_id = threadIdPromptValue;
+        } else {
+            alert("Please enter a valid chat Thread ID. Bye");
+            throw new Error("Please enter a valid chat Thread ID");
+        }
+        var skip_recent_x_messages_count = 10;
+        var skipXMessagesPromptValue = prompt(this.SkipRecentXMessagesCountPromptText);
+        if (skipXMessagesPromptValue != null && skipXMessagesPromptValue != undefined && parseInt(skipXMessagesPromptValue)) {
+            skip_recent_x_messages_count = parseInt(skipXMessagesPromptValue);
+        }
+        var delay = 3;
+        var delayPromptValue = prompt(this.DelayPromptText);
+        if (delayPromptValue != null && delayPromptValue != undefined && parseInt(delayPromptValue)) {
+            delay = parseInt(delayPromptValue);
+        }
+        var skip_text_messages = false;
+        var skipTextMessagesPromptValue = prompt(this.SkipTextMessagesPromptText);
+        if (skipTextMessagesPromptValue != null && skipTextMessagesPromptValue != undefined && skipTextMessagesPromptValue.toLowerCase()[0] == "y") {
+            skip_text_messages = true;
+        }
+
+        // Building Request
+        var startUnsendingRequest: StartUnsendingRequest = {
+            thread_id: thread_id,
+            skip_recent_x_messages_count: skip_recent_x_messages_count,
+            skip_text_messages: skip_text_messages,
+            delay: delay * 1000,
+        }
+
+        // Starting Unsending
+        await this.unsend(startUnsendingRequest);
+    }
+
+    /**
+     * Gets all the messsages and stores into a global array.
+     */
+    private async getAllMessagesData(threadId: string) {
+        if (threadId == null || threadId == undefined) {
+            threadId = window.location.href.split('/')[5]; // Get the chat id automatically from the url, make sure a chat is currently active
+            console.warn("Starting getting messages from thread Id : " + threadId.toString());
+        }
+
+        var oldestCursor = "";
+        var prevCursor = "";
+
+        // if its first message ever sent then stop else continue
+        while (prevCursor != "MINCURSOR") {
+
+            var getMessagesResponse = await this.getMessagesHttpRequest(threadId, oldestCursor);
+
+            //#region Own Inviter Adding to Participants
+            let isChatParticipantAlreadyExists = false;
+            for (let index = 0; index < this.UserCharParticipants.length; index++) {
+                const singleUserChatParticipant = this.UserCharParticipants[index];
+                if (singleUserChatParticipant.pk == getMessagesResponse?.thread?.inviter?.pk) {
+                    isChatParticipantAlreadyExists = true;
+                    break;
+                }
+            }
+            if (!isChatParticipantAlreadyExists) {
+                if (getMessagesResponse?.thread?.inviter?.pk
+                    &&
+                    getMessagesResponse?.thread?.inviter?.username
+                    &&
+                    getMessagesResponse?.thread?.inviter?.full_name
+                    &&
+                    getMessagesResponse?.thread?.inviter?.profile_pic_url
+                )
+                    this.UserCharParticipants.push(
+                        new ChatParticipant(
+                            getMessagesResponse.thread.inviter.pk,
+                            getMessagesResponse.thread.inviter.username,
+                            getMessagesResponse.thread.inviter.profile_pic_url,
+                            getMessagesResponse.thread.inviter.full_name
+                        )
+                    );
+            }
+            //#endregion
+
+            //#region Thread Participants adding
+            getMessagesResponse?.thread?.users?.forEach(element => {
+                let isChatParticipantAlreadyExists = false;
+                for (let index = 0; index < this.UserCharParticipants.length; index++) {
+                    const singleUserChatParticipant = this.UserCharParticipants[index];
+                    if (singleUserChatParticipant.pk == element?.pk) {
+                        isChatParticipantAlreadyExists = true;
+                        break;
+                    }
+                }
+                if (!isChatParticipantAlreadyExists) {
+                    this.UserCharParticipants.push(
+                        new ChatParticipant(
+                            element.pk,
+                            element.username,
+                            element.profile_pic_url,
+                            element.full_name
+                        )
+                    );
+                }
+            });
+            //#endregion
+
+            //#region Adding Messages
+            getMessagesResponse?.thread?.items?.forEach(element => {
+
+                var isExists = false;
+
+                for (let index = 0; index < this.AllMessagesItemsArray.length; index++) {
+                    const existingElement = this.AllMessagesItemsArray[index];
+                    if (existingElement?.item_id?.toString() == element?.item_id?.toString()) {
+                        isExists = true;
+                        break;
+                    }
+                }
+                if (!isExists) {
+                    this.AllMessagesItemsArray.push(element);
+                }
+            });
+            //#endregion
+
+            oldestCursor = getMessagesResponse?.thread?.oldest_cursor ?? '';
+            prevCursor = getMessagesResponse?.thread?.prev_cursor ?? '';
+
+        }
+
+        console.warn("All Messages fetched, No More messages to fetch");
+    }
+
+    /**
+     * Download All Messages Details JSON
+     */
+    public async downloadMessagesDetails() {
+
+        // Asking Prompts
+        var thread_id = '';
+        var threadIdPromptValue = prompt(this.ThreadIdPromptText);
+        if (threadIdPromptValue != null && threadIdPromptValue != undefined && threadIdPromptValue.length > 0) {
+            thread_id = threadIdPromptValue;
+        } else {
+            alert("Please enter a valid chat Thread ID. Bye");
+            throw new Error("Please enter a valid chat Thread ID");
+        }
+
+        await this.getAllMessagesData(thread_id);
+
+        await this.downloadJsonFile(
+            {
+                "myUserId": this.UserId,
+                "allMessagesItemsArray": this.AllMessagesItemsArray,
+                "usersChatParticipants": this.UserCharParticipants,
+            },
+            "InstaGramHelperChatMessagesData"
+        );
+    }
+
+    /**
+     * Downloads JSON file from Object in Browser
+     * @param {*} jsonDataObject Json Object
+     * @param {string} fileNameExcludingExtension 
+     */
+    private async downloadJsonFile(jsonDataObject: any, fileNameExcludingExtension: string = 'data') {
+        const blob = new Blob(['\ufeff' + JSON.stringify(jsonDataObject)], {
+            type: 'text/json;charset=utf-8;'
+        });
+        const dwldLink = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        const isSafariBrowser = navigator.userAgent.indexOf('Safari') !== -1 &&
+            navigator.userAgent.indexOf('Chrome') === -1;
+        if (isSafariBrowser) {
+            // for safari
+            dwldLink.setAttribute('target', '_blank');
+        }
+        dwldLink.setAttribute('href', url);
+        dwldLink.setAttribute('download', fileNameExcludingExtension + '.json');
+        dwldLink.style.visibility = 'hidden';
+        document.body.appendChild(dwldLink);
+        dwldLink.click();
+        document.body.removeChild(dwldLink);
+    }
+
+    /**
+     * Deletes all the follow requests for private account
+     * @param {string} deleteButtonCSSClassName | provide the css class name of Delete button by Inspect Element
+     */
+    public async deleteAllFollowRequests(deleteButtonCSSClassName: string) {
+        let t = document.getElementsByClassName(deleteButtonCSSClassName);
+
+        for (let index = 0; index < t.length; index++) {
+            const element = t[index];
+            await this.waitTimeout(1000)
+            if (element instanceof HTMLElement) {
+                element.click();
+            }
+        }
     }
 
 }
@@ -307,10 +541,51 @@ class Thread {
     next_cursor?: string
     prev_cursor?: string
     thread_title?: string
+    inviter?: {
+        full_name: string
+        pk: string;
+        username: string;
+        profile_pic_url: string;
+    }
+    users?: Array<{
+        full_name: string
+        pk: string;
+        username: string;
+        profile_pic_url: string;
+    }>
 }
 
 class Item {
     item_id?: string
     user_id?: string
     item_type?: string
+}
+
+class StartUnsendingRequest {
+    thread_id: string;
+    skip_recent_x_messages_count: number = 10;
+    delay: number = 3500;
+    skip_text_messages: boolean = false;
+
+    constructor(thread_id: string, skip_recent_x_messages_count: number, delay: number, skip_text_messages: boolean) {
+        this.thread_id = thread_id;
+        this.skip_recent_x_messages_count = skip_recent_x_messages_count;
+        this.delay = delay;
+        this.skip_text_messages = skip_text_messages;
+    }
+}
+
+class ChatParticipant {
+    pk: string;
+    username: string;
+    profile_pic_url: string;
+    full_name: string;
+
+    constructor(pk: string, username: string, profile_pic_url: string, full_name: string) {
+        this.pk = pk;
+        this.username = username;
+        this.profile_pic_url = profile_pic_url;
+        this.full_name = full_name;
+    }
+
 }

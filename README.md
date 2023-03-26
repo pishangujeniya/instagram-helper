@@ -5,7 +5,7 @@
 
 ![Website](https://img.shields.io/website?url=https%3A%2F%2Fpishangujeniya.github.io%2Finstagram-helper%2F)
 ![GitHub issues](https://img.shields.io/github/issues/pishangujeniya/instagram-helper)
-![GitHub closed issues](https://img.shields.io/github/issues-closed/pishangujeniya/instagram-helper)
+![GitHub closed issues](https://img.shields.io/github/issues-closed/pishangujeniya/**instagram**-helper)
 ![GitHub last commit](https://img.shields.io/github/last-commit/pishangujeniya/instagram-helper)
 ![GitHub license](https://img.shields.io/github/license/pishangujeniya/instagram-helper)
 
@@ -13,73 +13,35 @@
 
 This JavaScript has helper methods to perform various tasks automation.
 
-### Requirements
+### How to use?
 
-1. Windows 7/8/10/11 or any latest (Are you MacOS or Linux user? [Help](https://github.com/pishangujeniya/instagram-helper/issues/22#issuecomment-774589015))
-2. Chrome Browser
-
-### Initial Steps
-- Install [Chrome Browser](https://www.google.com/intl/en_in/chrome/)
-- Open [https://github.com/pishangujeniya/instagram-helper/releases/](https://github.com/pishangujeniya/instagram-helper/releases/)
-- Download latest release version (Source Code zip) and extract to desktop.
-- Create an empty temporary folder somewhere.
-- Double click [InstagramHelperChrome.vbs](./InstagramHelperChrome.vbs) from the extracted folder.
-- Select that temporary created folder.
-- That will then generate a Chrome Shortcut on your selected path with name `InstagramHelperChrome`
-- Open that Special Chrome Browser using that shortcut. (Ignore the flag that says _You are using an unsupported comman-line flag: --disable-web-security. Stability and security will suffer_) (This flag is shown because we will be mimicking the automation process of Sending Request to Instagram using Chrome).
-- Open [Instagram.com](https://instagram.com)
+- Use chrome browser
+- Install [**Disable Content-Security-Policy**](https://chrome.google.com/webstore/detail/disable-content-security/ieelmcmcagommplceebfedjlakkhpden?hl=en) Extension.
+- Install [**CORS Unblock**](https://chrome.google.com/webstore/detail/cors-unblock/lfhmikememgdcahcdlaciloancbhjino/related?hl=en) Extension.
+- Open [Instagram.com](https://instagram.com) in new tab and click on CSP & CORS Unblock extension icons to enable them.
 - Press `F12` (Developer Tools) or `Ctrl+Shift+I`
+- Press `Ctrl+R` to reload the page.
+- Paste the following code in the console tab.
 
+```javascript
 
-### ⁉ How to delete/unsend all messages? 📃📷🎥
-- Follow the initial steps
-- Open any chat and then see the link should be such as (https://www.instagram.com/direct/t/xxxx)
-- Note and copy the last long numerical digits from link to some notepad.
-- Those digits is your chat thread Id.
-- Now Copy the [InstagramHelper.js](./InstagramHelper.js) file contents and paste it in `Console` tab
-- Copy Paste the following code in Console and Hit Enter (the number 10 after chat thread id is in the code after comma is for skipping recently sent 10 messages from unsending, you can change it to whatever number you want to skip those number of recently you send messages from unsending).
-- ```javascript
-    var ig  = new InstagramHelper();
-    ig.startUnsending("your_chat_thread_Id",10);
-    ```
-- After that you will see **getting messages...** displayed in the console window and **Deleting...** will be displayed whenever it starts deleting.
-- At the end it will show **All messages deleted.**, So you have unsended every message that you sent.
+const script = document.createElement("script");
+script.src = "https://cdn.jsdelivr.net/gh/pishangujeniya/instagram-helper/InstagramHelper.min.js";
+script.async = false;
+document.head.appendChild(script);
+new InstagramHelper();
 
-- Deleting messages is kept intentionally slow because Instagram has limit to delete number of messages in per second.
-> If we delete fastly then Instagram servers detects it as bot and then unsending is not allowed with the session temporarily, until you logout and relogin. So to avoid getting detected, we have kept a delay in the code to delete messages with specific interval of time.
-> It is very tedious and time consuming process, but efficient and better than doing it manually. One can simply open a new chrome browser window and follow the simple steps and minimise it.
+```
 
-### ⁉ How to delete/unsend all media content (other than text)?📷🎥
-- Follow the initial steps
-- Open any chat and then see the link should be such as (https://www.instagram.com/direct/t/xxxx)
-- Note and copy the last long numerical digits from link to some notepad.
-- Those digits is your chat thread Id.
-- Now Copy the [InstagramHelper.js](./InstagramHelper.js) file contents and paste it in `Console` tab
-- Copy Paste the following code in Console and Hit Enter
-- ```javascript
-    var ig  = new InstagramHelper();
-    ig.startUnsendingMedia("your_chat_thread_Id");
-    ```
-- After that you will see **getting media...** displayed in the console window and **Deleting...** will be displayed whenever it starts deleting.
-- At the end it will show **All media deleted.**, So you have unsended every message that you sent.
+### Prompts
 
-### ⁉ How to get exported all messages?💾
-- Follow the initial steps
-- Open any chat and then see the link should be such as (https://www.instagram.com/direct/t/xxxx)
-- Note and copy the last long numerical digits from link to some notepad.
-- Those digits is your chat thread Id.
-- Now Copy the [InstagramHelper.js](./InstagramHelper.js) file contents and paste it in `Console` tab
-- Copy Paste the following code in Console and Hit Enter
-- ```javascript
-    var ig  = new InstagramHelper();
-    ig.getAllMessagesData("your_chat_thread_Id");
-    ```
-- Then run the following command to get the JSON extracted file.
-- ```javascript
-    ig.downloadMessagesDetails();
-    ```
+|Input Message| Corresponding Meaning |
+|--|--|
+| Please enter your chat Thread ID. | Your chat thread ID. <img src="./images/chat_thread_id.png"> |
+| Please enter number of recent messages you want to skip. Default is `10`. | The number of your recently sent messages which will be skipped and will not be deleted. If you do not enter any number then it will take by default 10 |
+| Please enter number of seconds to randomly wait between each message to delete. Default is `3` seconds | Number of seconds to randomly wait between unsending each message, so that Instagram server do not think that the actions are automated. |
+| Do you want to skip unsending text messages - `yes`/`no`? It means it will unsend media contents. Default is `no`. | If you provide `yes` then it will not unsend the text messages, and  starts unsending other type of messages such as *media*,*photos*, *videos* which you have sent. |
 
-- Open the link [InstagramHelperDataViewer](./InstagramHelperDataViewer.html) to view the data.
 
 ### ⁉ FAQ
 
@@ -89,19 +51,22 @@ This JavaScript has helper methods to perform various tasks automation.
 
 #### 😵 Getting too often "Try again tomorrow" Error or 429 Response Code?
 - Try to close the browser re-open Instagram and logout then login.
-- Instead of running this `ig.startUnsending("your_chat_thread_Id",10);` run with more higher number of delay by default it is 3500 milliseconds, try other values like 4500, 5500, 6500 `ig.startUnsending("your_chat_thread_Id",10,5500);`
+- Try with more higher number of delay seconds.
+
+#### ⏳ Why unsending is slow?
+- Deleting messages is kept intentionally slow because Instagram has limit to delete number of messages in per second.
+- If we delete fastly then Instagram servers detects it as bot and then unsending is not allowed with the session temporarily, until you logout and relogin. So to avoid getting detected, we have kept a delay in the code to delete messages with specific interval of time.
+- It is very tedious and time consuming process, but efficient and better than doing it manually. One can simply open a new chrome browser window and follow the simple steps and minimise it.
+
+#### 🛑 How to stop unsending process?
+- Refresh the page or Close the browser or Restart the computer.
+
+#### 😕 How see my downloaded messsages?
+- Open the link [InstagramHelperDataViewer](./InstagramHelperDataViewer.html) to view the data.
 
 #### 😒 Any more questions?
 - Check [Issues Page](https://github.com/pishangujeniya/instagram-helper/issues?q=)
 - If your question is not existing in issues do create a new Issue [here](https://github.com/pishangujeniya/instagram-helper/issues/new/choose) instead of messaging on social media or emailing me.
-
-
-#### 🛑 How to stop unsending process?
-- Refresh the browser or Close the browser or Restart the computer.
-
-#### 😕 How to confirm how many messages are there in chat?
-- Follow the steps mentioned in 'How to get exported all messages?'
-
 
 ### ⚠ Warning
 > The script or the creator is in any ways not reponsibile for any of your actions. Do at your own risk.
