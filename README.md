@@ -15,9 +15,13 @@ This JavaScript has helper methods to perform various tasks automation.
 
 ### How to use?
 
-- Use chrome browser
+- Install [Chrome Browser](https://www.google.com/intl/en_in/chrome/)
+- Create an empty temporary folder somewhere.
+- Download the file [InstagramHelperChrome.vbs](./InstagramHelperChrome.vbs) and double click on it.
+- Select that temporary created folder.
+- That will then generate a Chrome Shortcut on your selected path with name `InstagramHelperChrome`
+- Open that Special Chrome Browser using that shortcut. (Ignore the flag that says _You are using an unsupported comman-line flag: --disable-web-security. Stability and security will suffer_) (This flag is shown because we will be mimicking the automation process of Sending Request to Instagram using Chrome).
 - Install [**Disable Content-Security-Policy**](https://chrome.google.com/webstore/detail/disable-content-security/ieelmcmcagommplceebfedjlakkhpden?hl=en) Extension.
-- Install [**CORS Unblock**](https://chrome.google.com/webstore/detail/cors-unblock/lfhmikememgdcahcdlaciloancbhjino/related?hl=en) Extension.
 - Open [Instagram.com](https://instagram.com) in new tab and click on CSP & CORS Unblock extension icons to enable them.
 - Press `F12` (Developer Tools) or `Ctrl+Shift+I`
 - Press `Ctrl+R` to reload the page.
