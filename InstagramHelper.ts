@@ -49,10 +49,10 @@ class InstagramHelper {
     }
 
     private async waitTimeout(ms: number) {
-        console.log("Waiting for " + ms.toString() + " milliseconds");
+        console.warn("Waiting for " + ms.toString() + " milliseconds");
         return new Promise((resolve, reject) => {
             setTimeout(() => {
-                console.log("Done waiting");
+                console.warn("Done waiting");
                 resolve(ms)
             }, ms)
         })
@@ -184,6 +184,7 @@ class InstagramHelper {
             "credentials": "include",
         };
 
+        console.info("Getting Messages...");
         return await fetch(
             getMessageAPIUrl,
             getMessagesRequestInit
@@ -236,12 +237,13 @@ class InstagramHelper {
             "mode": "cors"
         };
 
+        console.info("Unsending Message...");
         return await fetch(
             deleteMessageAPIUrl,
             deleteMessageRequestInit
         ).then((response) => {
             if (response.status >= 200 && response.status < 300) {
-                console.info("Deleting...");
+                console.info("Deleted Message");
                 return response;
             } else {
                 throw new Error("Try again tomorrow");
@@ -288,7 +290,7 @@ class InstagramHelper {
             getMessagesResponse?.thread?.items.forEach(element => {
                 if (element?.user_id?.toString() == this.UserId.toString()) {
                     // Skipping those types of messages
-                    if (element?.item_type && skipItemTypesList.includes(element?.item_type?.toString())) {
+                    if (element?.item_type && !skipItemTypesList.includes(element?.item_type?.toString())) {
                         if (element?.item_id?.toString()) {
                             if (!itemIdsToDelete.includes(element?.item_id?.toString())) {
                                 itemIdsToDelete.push(element?.item_id?.toString());
@@ -299,7 +301,6 @@ class InstagramHelper {
             });
 
             //#region  Deleting Messages
-
             for (let itemIdIndex = 0; itemIdIndex < itemIdsToDelete.length; itemIdIndex++) {
                 const messageItemId = itemIdsToDelete[itemIdIndex];
 

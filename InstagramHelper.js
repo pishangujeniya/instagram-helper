@@ -54,10 +54,10 @@ class InstagramHelper {
     }
     waitTimeout(ms) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("Waiting for " + ms.toString() + " milliseconds");
+            console.warn("Waiting for " + ms.toString() + " milliseconds");
             return new Promise((resolve, reject) => {
                 setTimeout(() => {
-                    console.log("Done waiting");
+                    console.warn("Done waiting");
                     resolve(ms);
                 }, ms);
             });
@@ -182,6 +182,7 @@ class InstagramHelper {
                 "mode": "cors",
                 "credentials": "include",
             };
+            console.info("Getting Messages...");
             return yield fetch(getMessageAPIUrl, getMessagesRequestInit).then((value) => __awaiter(this, void 0, void 0, function* () {
                 if (value.status != 200) {
                     throw new Error("Try again tomorrow");
@@ -232,9 +233,10 @@ class InstagramHelper {
                 "method": "POST",
                 "mode": "cors"
             };
+            console.info("Unsending Message...");
             return yield fetch(deleteMessageAPIUrl, deleteMessageRequestInit).then((response) => {
                 if (response.status >= 200 && response.status < 300) {
-                    console.info("Deleting...");
+                    console.info("Deleted Message");
                     return response;
                 }
                 else {
@@ -276,7 +278,7 @@ class InstagramHelper {
                     var _a, _b, _c, _d, _e;
                     if (((_a = element === null || element === void 0 ? void 0 : element.user_id) === null || _a === void 0 ? void 0 : _a.toString()) == this.UserId.toString()) {
                         // Skipping those types of messages
-                        if ((element === null || element === void 0 ? void 0 : element.item_type) && skipItemTypesList.includes((_b = element === null || element === void 0 ? void 0 : element.item_type) === null || _b === void 0 ? void 0 : _b.toString())) {
+                        if ((element === null || element === void 0 ? void 0 : element.item_type) && !skipItemTypesList.includes((_b = element === null || element === void 0 ? void 0 : element.item_type) === null || _b === void 0 ? void 0 : _b.toString())) {
                             if ((_c = element === null || element === void 0 ? void 0 : element.item_id) === null || _c === void 0 ? void 0 : _c.toString()) {
                                 if (!itemIdsToDelete.includes((_d = element === null || element === void 0 ? void 0 : element.item_id) === null || _d === void 0 ? void 0 : _d.toString())) {
                                     itemIdsToDelete.push((_e = element === null || element === void 0 ? void 0 : element.item_id) === null || _e === void 0 ? void 0 : _e.toString());
