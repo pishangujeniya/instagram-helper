@@ -1,0 +1,30 @@
+{
+  "name": "instagram-helper",
+  "version": "3.0",
+  "description": "Instagram Scripts for Bulk Unsending Direct Messages",
+  "main": "InstagramHelper.js",
+  "scripts": {
+    "compile": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pishangujeniya/instagram-helper.git"
+  },
+  "keywords": [
+    "instagram",
+    "unsend",
+    "bulk",
+    "messages",
+    "scripts"
+  ],
+  "author": "Pishang Ujeniya",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pishangujeniya/instagram-helper/issues"
+  },
+  "homepage": "https://github.com/pishangujeniya/instagram-helper#readme",
+  "dependencies": {
+    "typescript": "^5.0.2"
+  }
+}
