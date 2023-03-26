@@ -5,7 +5,7 @@
 
 ![Website](https://img.shields.io/website?url=https%3A%2F%2Fpishangujeniya.github.io%2Finstagram-helper%2F)
 ![GitHub issues](https://img.shields.io/github/issues/pishangujeniya/instagram-helper)
-![GitHub closed issues](https://img.shields.io/github/issues-closed/pishangujeniya/**instagram**-helper)
+![GitHub closed issues](https://img.shields.io/github/issues-closed/pishangujeniya/instagram-helper)
 ![GitHub last commit](https://img.shields.io/github/last-commit/pishangujeniya/instagram-helper)
 ![GitHub license](https://img.shields.io/github/license/pishangujeniya/instagram-helper)
 
@@ -26,10 +26,13 @@ This JavaScript has helper methods to perform various tasks automation.
 ```javascript
 
 const script = document.createElement("script");
-script.src = "https://cdn.jsdelivr.net/gh/pishangujeniya/instagram-helper/InstagramHelper.min.js";
+script.src = "https://cdn.jsdelivr.net/gh/pishangujeniya/instagram-helper@main/InstagramHelper.min.js";
 script.async = false;
 document.head.appendChild(script);
-new InstagramHelper();
+setTimeout(() => {
+    new InstagramHelper();
+}, 2000);
+
 
 ```
 
@@ -61,7 +64,7 @@ new InstagramHelper();
 #### 🛑 How to stop unsending process?
 - Refresh the page or Close the browser or Restart the computer.
 
-#### 😕 How see my downloaded messsages?
+#### 😕 How to see my downloaded messsages?
 - Open the link [InstagramHelperDataViewer](./InstagramHelperDataViewer.html) to view the data.
 
 #### 😒 Any more questions?
