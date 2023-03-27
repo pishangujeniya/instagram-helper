@@ -109,10 +109,10 @@ setTimeout(() => {
 - [PayPal](https://paypal.me/Pishang)
 
 ### 😍 Donors
-1. Laila Gates
-2. Nikita Rvachev
-3. Mark Utnehmer
-4. [Nadir Ajnay](nadirajnay@gmail.com)
+1. [Nikita Rvachev](mailto:nikita@rvachev.ru)
+2. [Laila Gates](mailto:laila1308@yahoo.co.uk)
+3. [Mark Utnehmer](mailto:mark28026@gmail.com)
+4. [Nadir Ajnay](mailto:nadirajnay@gmail.com)
 
 <a href="https://paypal.me/Pishang"><img src="./images/9218.jpg"></a>
 
