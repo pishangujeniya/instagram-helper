@@ -1,10 +1,11 @@
 {
   "name": "instagram-helper",
-  "version": "3.0",
+  "version": "3.1",
   "description": "Instagram Scripts for Bulk Unsending Direct Messages",
   "main": "InstagramHelper.js",
   "scripts": {
     "compile": "tsc",
+    "compile:version": "tsc --outfile dist/InstagramHelper.%npm_package_version%.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
