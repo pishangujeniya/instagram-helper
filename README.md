@@ -22,7 +22,7 @@ This JavaScript has helper methods to perform various tasks automation.
 - That will then generate a Chrome Shortcut on your selected path with name `InstagramHelperChrome`
 - Open that Special Chrome Browser using that shortcut. (Ignore the flag that says _You are using an unsupported comman-line flag: --disable-web-security. Stability and security will suffer_) (This flag is shown because we will be mimicking the automation process of Sending Request to Instagram using Chrome).
 - Install [**Disable Content-Security-Policy**](https://chrome.google.com/webstore/detail/disable-content-security/ieelmcmcagommplceebfedjlakkhpden?hl=en) Extension.
-- Open [Instagram.com](https://instagram.com) in new tab and click on CSP & CORS Unblock extension icons to enable them.
+- Open [Instagram.com](https://instagram.com) in new tab and click on CSP icon to enable them. *(It should turn pink)*
 - Press `F12` (Developer Tools) or `Ctrl+Shift+I`
 - Press `Ctrl+R` to reload the page.
 - Paste the following code in the console tab.
@@ -30,7 +30,7 @@ This JavaScript has helper methods to perform various tasks automation.
 ```javascript
 
 const script = document.createElement("script");
-script.src = "https://cdn.jsdelivr.net/gh/pishangujeniya/instagram-helper@main/InstagramHelper.min.js";
+script.src = "https://cdn.jsdelivr.net/gh/pishangujeniya/instagram-helper@3.1/dist/InstagramHelper.min.js";
 script.async = false;
 document.head.appendChild(script);
 setTimeout(() => {
@@ -109,10 +109,11 @@ setTimeout(() => {
 - [PayPal](https://paypal.me/Pishang)
 
 ### 😍 Donors
-1. [Nikita Rvachev](mailto:nikita@rvachev.ru)
-2. [Laila Gates](mailto:laila1308@yahoo.co.uk)
-3. [Mark Utnehmer](mailto:mark28026@gmail.com)
-4. [Nadir Ajnay](mailto:nadirajnay@gmail.com)
+1. NXkXiXa RXaXhXv
+2. LXiXa GXtXs
+3. MXrX UXnXhXeX
+4. NXdXr AXnXy
+5. MXKXrXiXtXn
 
 <a href="https://paypal.me/Pishang"><img src="./images/9218.jpg"></a>
 

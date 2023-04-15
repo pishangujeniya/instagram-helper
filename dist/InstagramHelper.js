@@ -27,10 +27,9 @@ class InstagramHelper {
             www_claim_v2: "www-claim-v2"
         };
         this.UserId = this.getCookie("ds_user_id");
-        this.getConsumerLibCommonsJs().then(() => __awaiter(this, void 0, void 0, function* () {
-            console.info('Ready you can now continue');
-            yield this.askPrompts();
-        }));
+        this.storeAppIds();
+        console.info('Ready you can now continue');
+        this.askPrompts();
     }
     askPrompts() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -95,8 +94,19 @@ class InstagramHelper {
         return "";
     }
     /**
+     * App Ids Stored from this url : https://static.cdninstagram.com/rsrc.php/v3iyjp4/yO/l/en_US/DRdIhWKQvFs.js?
+     */
+    storeAppIds() {
+        // Source https://static.cdninstagram.com/rsrc.php/v3iyjp4/yO/l/en_US/DRdIhWKQvFs.js
+        localStorage.setItem(this.LocalStorageKeys.instagramFBAppId, "124024574287414");
+        localStorage.setItem(this.LocalStorageKeys.instagramWebFBAppId, "1217981644879628");
+        localStorage.setItem(this.LocalStorageKeys.instagramWebDesktopFBAppId, "389801252");
+        localStorage.setItem(this.LocalStorageKeys.igLiteAppId, "");
+    }
+    /**
      * provides the ConsumerLibCommon Js File
      * @param {string} jsFileName default is 4f7f1faf9a94.js
+     * @deprecated The method should not be used, use storeAppIds()
      */
     getConsumerLibCommonsJs(jsFileName = "4f7f1faf9a94.js") {
         return __awaiter(this, void 0, void 0, function* () {
