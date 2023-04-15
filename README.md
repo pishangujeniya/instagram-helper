@@ -15,6 +15,8 @@ This JavaScript has helper methods to perform various tasks automation.
 
 ### How to use?
 
+![Instagram Helper](./images/InstagramHelperFlow.svg)
+
 - Install [Chrome Browser](https://www.google.com/intl/en_in/chrome/)
 - Create an empty temporary folder somewhere.
 - Download the file [InstagramHelperChrome.vbs](./InstagramHelperChrome.vbs) and double click on it.
