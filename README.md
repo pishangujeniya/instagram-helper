@@ -1,5 +1,8 @@
 ## 🌎 [Instagram Helper](https://pishangujeniya.github.io/instagram-helper/)
 
+<h2 style="color: red;"> THIS DOES NOT WORK NOW, AS INSTAGRAM UPDATED THIER SITE IN MAY, 2023 </h2>
+<p> We are trying to fix it, but it may take couple more weeks. Press Watch & star at the above to keep yourself updated </p>
+
 # Instagram Helper Script
 > Instagram Scripts for various tasks automation
 
